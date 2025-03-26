@@ -1,0 +1,95 @@
+<div class="marketplace-container">
+    <!-- Banner Principal -->
+    <section class="hero-section">
+      <div class="container">
+        <h1 class="welcome-title">Venta de Productos Marck-PT-PPP</h1>
+        <p class="welcome-subtitle">Sube tus Productos y demuestralos a las personas que si les interesa</p>
+
+
+        <button 
+        (click)="rutaRegistrarProducto()" 
+        class="btn bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+        </svg>
+        Registrar Nuevo Producto
+      </button>
+
+    </div>
+    </section>
+  
+    <!-- Contenido Principal -->
+    <div class="filters-container">
+      <!-- Filtros y Ordenamiento -->
+      <div class="filters-section">
+        <div class="row">
+          <div class="col-md-8 mb-3 mb-md-0">
+            <div class="search-box">
+              <input type="text" class="form-control" placeholder="Buscar productos..." [(ngModel)]="searchTerm" (input)="buscarProductos($event)">
+            </div>
+
+            <button class="btn btn-secondary mt-4 py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" (click)="cerrarSesion()">
+                Cerrar Sesión
+              </button>
+
+          </div>
+
+          
+          <div class="col-md-4">
+            <select class="form-select" [(ngModel)]="sortOption" (change)="ordenarProductos($event)">
+              <option value="">Ordenar por</option>
+              <option value="precio-asc">Precio: Menor a Mayor</option>
+              <option value="precio-desc">Precio: Mayor a Menor</option>
+              <option value="recientes">Más Recientes</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="products-container">
+      <!-- Grid de Productos -->
+      <div class="products-grid">
+        <div *ngFor="let producto of productosFiltrados; let i = index">
+          <div class="product-card">
+            <div class="product-badge new" *ngIf="i % 5 === 0">NUEVO</div>
+            <div class="product-image">
+              <img [src]="producto.imagen_producto" [alt]="producto.nombre_producto">
+            </div>
+            <div class="product-info">
+              <div class="product-category">{{getCategoryName(i)}}</div>
+              <h3 class="product-title">{{producto.nombre_producto}}</h3>
+              <p class="product-price">
+                $ {{producto.precio_producto | number:'1.2-2'}}
+                <span class="discount" *ngIf="i % 3 === 0">20% OFF</span>
+              </p>
+              <div class="shipping-free" *ngIf="i % 2 === 0">
+                <i class="bi bi-truck shipping-icon"></i>
+                Envío gratis
+              </div>
+              <p class="product-description">{{producto.descripcion}}</p>
+              <button class="btn btn-primary" (click)="verDetalles(producto)">
+                Ver Detalles
+                <i class="bi bi-arrow-right btn-icon"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+  <!-- ... existing code ... -->
+
+  <!-- ... existing code ... -->
+      <!-- Paginación -->
+      <div class="pagination">
+        <div class="page-item" *ngFor="let page of [1,2,3,4,5]">
+          <button class="page-link" [class.active]="currentPage === page" (click)="cambiarPagina(page)">
+            {{page}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

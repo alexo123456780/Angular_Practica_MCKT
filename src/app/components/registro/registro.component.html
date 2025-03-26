@@ -1,0 +1,115 @@
+<div class="min-h-screen h-screen w-screen flex items-center justify-center bg-gradient-to-br from-orange-400 via-pink-500 to-yellow-400 p-4 md:p-8">
+  <div class="w-full max-w-4xl h-auto flex bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden relative">
+    <div class="absolute inset-0 bg-white/95 backdrop-blur-sm z-0"></div>
+    <div class="w-1/2 p-8 md:p-16 flex items-center justify-center relative z-10">
+      <div class="flex flex-col justify-center max-w-md w-full">
+        <div class="mb-8">
+          <h2 class="text-3xl font-bold text-gray-800 mb-2 animate-[fadeIn_0.6s_ease-out] flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+            </svg>
+            Registro
+          </h2>
+        </div>
+
+        <form [formGroup]="registroForm" (ngSubmit)="onsubmit()" class="space-y-6 animate-[fadeIn_0.8s_ease-out]">
+          <div class="space-y-2">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                id="nombre"
+                formControlName="nombre"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-primary-200 bg-white/80 hover:bg-white/90 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block transition-all duration-200 ease-in-out backdrop-blur-sm text-gray-800 placeholder-gray-500 hover:scale-[1.01] hover:shadow-lg"
+                [ngClass]="{'border-red-500 focus:ring-red-500 focus:border-red-500': registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched,
+                          'border-gray-300': !(registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched)}"
+                placeholder="Ejemplo: Maria Lourdes"
+              />
+            </div>
+            <div class="text-sm text-red-500 h-5 animate-[fadeIn_0.3s_ease-out]" *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched">
+              <span *ngIf="registroForm.get('nombre')?.errors?.['required']">El nombre es requerido</span>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                </svg>
+              </div>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-primary-200 bg-white/80 hover:bg-white/90 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block transition-all duration-200 ease-in-out backdrop-blur-sm text-gray-800 placeholder-gray-500 hover:scale-[1.01] hover:shadow-lg"
+                [ngClass]="{'border-red-500 focus:ring-red-500 focus:border-red-500': registroForm.get('email')?.invalid && registroForm.get('email')?.touched,
+                          'border-gray-300': !(registroForm.get('email')?.invalid && registroForm.get('email')?.touched)}"
+                placeholder="juanitaexample@gmail.com"
+              />
+            </div>
+            <div class="text-sm text-red-500 h-5 animate-[fadeIn_0.3s_ease-out]" *ngIf="registroForm.get('email')?.invalid && registroForm.get('email')?.touched">
+              <span *ngIf="registroForm.get('email')?.errors?.['required']">El correo electrónico es requerido</span>
+              <span *ngIf="registroForm.get('email')?.errors?.['email']">Ingrese un correo electrónico válido</span>
+            
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-primary-200 bg-white/80 hover:bg-white/90 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block transition-all duration-200 ease-in-out backdrop-blur-sm text-gray-800 placeholder-gray-500 hover:scale-[1.01] hover:shadow-lg"
+                [ngClass]="{'border-red-500 focus:ring-red-500 focus:border-red-500': registroForm.get('password')?.invalid && registroForm.get('password')?.touched,
+                          'border-gray-300': !(registroForm.get('password')?.invalid && registroForm.get('password')?.touched)}"
+                placeholder="Ejemplo:********"
+              />
+            </div>
+            <div class="text-sm text-red-500 h-5 animate-[fadeIn_0.3s_ease-out]" *ngIf="registroForm.get('password')?.invalid && registroForm.get('password')?.touched">
+              <span *ngIf="registroForm.get('password')?.errors?.['required']">La contraseña es requerida</span>
+            </div>
+          </div>
+
+          <div class="h-5">
+            <div class="text-sm text-red-500 animate-[shakeError_0.5s_ease-in-out]" *ngIf="errorMessage">
+              {{ errorMessage }}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            [disabled]="registroForm.invalid"
+            class="w-full py-3 px-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-primary-500/50 hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transform transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+            </svg>
+            Registrarse
+          </button>
+          
+          <div class="mt-4 animate-[fadeIn_1s_ease-out]">
+            <p class="text-gray-600">¿Ya tienes una cuenta? <a routerLink="/login" class="text-pink-600 hover:text-pink-700 font-medium transition-colors duration-200">Inicia sesión aquí</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="w-1/2 bg-gradient-to-br from-orange-400 via-pink-500 to-yellow-400 p-8 md:p-16 flex items-center justify-center relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-orange-400/30 via-pink-500/30 to-yellow-400/30 backdrop-blur-sm"></div>
+      <div class="text-white text-center relative z-10">
+        <h1 class="text-5xl md:text-6xl font-bold mb-4 animate-[bounceIn_0.8s_ease-out] drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">Bienvenido.</h1>
+        <p class="text-lg md:text-xl font-light animate-[fadeIn_1s_ease-out]">Únete a nuestra comunidad</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,93 @@
+<div class="min-h-screen h-screen w-screen flex items-center justify-center bg-gradient-to-br from-orange-400 via-pink-500 to-yellow-400 p-4 md:p-8">
+  <div class="w-full max-w-4xl h-auto flex bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden relative">
+    <div class="absolute inset-0 bg-white/95 backdrop-blur-sm z-0"></div>
+    <div class="w-1/2 p-8 md:p-16 flex items-center justify-center relative z-10">
+      <div class="flex flex-col justify-center max-w-md w-full">
+        <div class="mb-8">
+          <h2 class="text-3xl font-bold text-gray-800 mb-2 animate-[fadeIn_0.6s_ease-out] flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
+            </svg>
+            Iniciar Sesión
+          </h2>
+        </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6 animate-[fadeIn_0.8s_ease-out]">
+      <div class="space-y-2">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+            </svg>
+          </div>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-primary-200 bg-white/80 hover:bg-white/90 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block transition-all duration-200 ease-in-out backdrop-blur-sm text-gray-800 placeholder-gray-500 hover:scale-[1.01] hover:shadow-lg"
+            [ngClass]="{'border-red-500 focus:ring-red-500 focus:border-red-500': loginForm.get('email')?.invalid && loginForm.get('email')?.touched,
+                      'border-gray-300': !(loginForm.get('email')?.invalid && loginForm.get('email')?.touched)}"
+            placeholder="Correo Electrónico"
+          />
+        </div>
+        <div class="text-sm text-red-500 h-5 animate-[fadeIn_0.3s_ease-out]" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          <span *ngIf="loginForm.get('email')?.errors?.['required']">El correo electrónico es requerido</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['email']">Ingrese un correo electrónico válido</span>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-primary-200 bg-white/80 hover:bg-white/90 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block transition-all duration-200 ease-in-out backdrop-blur-sm text-gray-800 placeholder-gray-500 hover:scale-[1.01] hover:shadow-lg"
+            [ngClass]="{'border-red-500 focus:ring-red-500 focus:border-red-500': loginForm.get('password')?.invalid && loginForm.get('password')?.touched,
+                      'border-gray-300': !(loginForm.get('password')?.invalid && loginForm.get('password')?.touched)}"
+            placeholder="Contraseña"
+          />
+        </div>
+        <div class="text-sm text-red-500 h-5 animate-[fadeIn_0.3s_ease-out]" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es requerida</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
+        </div>
+      </div>
+
+      <div class="h-5">
+        <div class="text-sm text-red-500 animate-[shakeError_0.5s_ease-in-out]" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid"
+        class="w-full py-3 px-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-primary-500/50 hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transform transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] flex items-center justify-center gap-2"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+        </svg>
+        Iniciar Sesión
+      </button>
+      
+      <div class="mt-4 animate-[fadeIn_1s_ease-out]">
+        <p class="text-gray-600">¿No tienes una cuenta? <a routerLink="/registro" class="text-pink-600 hover:text-pink-700 font-medium transition-colors duration-200">Regístrate aquí</a></p>
+      </div>
+    </form>
+    </div>
+    </div>
+    <div class="w-1/2 bg-gradient-to-br from-orange-400 via-pink-500 to-yellow-400 p-8 md:p-16 flex items-center justify-center relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-orange-400/30 via-pink-500/30 to-yellow-400/30 backdrop-blur-sm"></div>
+      <div class="text-white text-center relative z-10">
+        <h1 class="text-5xl md:text-6xl font-bold mb-4 animate-[bounceIn_0.8s_ease-out] drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">Welcome.</h1>
+        <p class="text-lg md:text-xl font-light animate-[fadeIn_1s_ease-out]">Nos alegra verte de nuevo</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+nav {
+    background-color: #3f51b5;
+    padding: 1rem;
+    text-align: center;
+  
+    a {
+      color: white;
+      text-decoration: none; /* Quita el subrayado */
+      margin: 0 1rem;
+      font-size: 1.1rem;
+      cursor: pointer; /* Cambia el cursor a una mano */
+  
+      &:hover {
+        text-decoration: underline; /* Subraya al pasar el mouse */
+        color: #ffd740; /* Cambia el color al pasar el mouse */
+      }
+    }
+  }

@@ -1,0 +1,85 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Registra un nuevo producto</h2>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+    </div>
+
+    <form [formGroup]="productoForm" (ngSubmit)="agregarProducto()" class="needs-validation">
+        <div class="form-group mb-3">
+            <label for="nombre" class="form-label">Nombre del producto</label>
+            <input 
+                type="text" 
+                id="nombre" 
+                formControlName="nombre_producto" 
+                class="form-control" 
+                [class.is-invalid]="productoForm.get('nombre_producto')?.invalid && productoForm.get('nombre_producto')?.touched"
+                placeholder="Ingrese el nombre del producto">
+            <div class="invalid-feedback" *ngIf="productoForm.get('nombre_producto')?.errors?.['required'] && productoForm.get('nombre_producto')?.touched">
+                El nombre del producto es requerido
+            </div>
+            <div class="invalid-feedback" *ngIf="productoForm.get('nombre_producto')?.errors?.['minlength']">
+                El nombre debe tener al menos 3 caracteres
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="precio" class="form-label">Precio del Producto</label>
+            <input 
+                type="number" 
+                id="precio" 
+                formControlName="precio_producto" 
+                class="form-control"
+                [class.is-invalid]="productoForm.get('precio_producto')?.invalid && productoForm.get('precio_producto')?.touched"
+                placeholder="Ingrese el precio del producto">
+            <div class="invalid-feedback" *ngIf="productoForm.get('precio_producto')?.errors?.['required'] && productoForm.get('precio_producto')?.touched">
+                El precio es requerido
+            </div>
+            <div class="invalid-feedback" *ngIf="productoForm.get('precio_producto')?.errors?.['min']">
+                El precio debe ser mayor a 0
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="descripcion" class="form-label">Descripción del producto</label>
+            <textarea 
+                id="descripcion" 
+                formControlName="descripcion" 
+                class="form-control"
+                [class.is-invalid]="productoForm.get('descripcion')?.invalid && productoForm.get('descripcion')?.touched"
+                placeholder="Ingrese la descripción del producto"
+                rows="3"></textarea>
+            <div class="invalid-feedback" *ngIf="productoForm.get('descripcion')?.errors?.['required'] && productoForm.get('descripcion')?.touched">
+                La descripción es requerida
+            </div>
+            <div class="invalid-feedback" *ngIf="productoForm.get('descripcion')?.errors?.['minlength']">
+                La descripción debe tener al menos 10 caracteres
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="imagen" class="form-label">URL de la imagen del producto</label>
+            <input 
+                type="url" 
+                id="imagen" 
+                formControlName="imagen_producto" 
+                class="form-control"
+                [class.is-invalid]="productoForm.get('imagen_producto')?.invalid && productoForm.get('imagen_producto')?.touched"
+                placeholder="Ingrese la URL de la imagen del producto">
+            <div class="invalid-feedback" *ngIf="productoForm.get('imagen_producto')?.errors?.['required'] && productoForm.get('imagen_producto')?.touched">
+                La url  de la imagen es requerida
+            </div>
+        </div>
+
+        <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="productoForm.invalid || successMessage">
+            Registrar Producto
+        </button>
+    </form>
+</div>
