@@ -42,18 +42,15 @@ export class CategoriaServiceService {
   //funcion para crear una categoria
 
 
-  crearCategoria(categoria:Categoria): Observable<Categoria[]>{
+  crearCategoria(categoria:Categoria): Observable<Categoria>{
 
     return this.http.post<CategoriaResponse>(`${this.apiGlobal}/crearCategoria`,categoria).pipe(
 
       map(response =>{
 
-        console.log(`Se creo exitosamente la categoria: ${response}`);
+        console.log(`Se creo exitosamente la categoria: ${response.message}`);
 
-        return response.data || [];
-
-
-
+        return response.data[0];
       })
 
 

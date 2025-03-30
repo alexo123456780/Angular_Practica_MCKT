@@ -35,7 +35,6 @@ export class LoginComponent {
           console.log('Respuesta del servidor:', response);
           if (response && response.status) {
             console.log('Login exitoso, guardando token...');
-            // Guardar el token (puede estar en diferentes ubicaciones según la estructura de la respuesta)
             const token = response.token || (response.data && response.data.token);
             if (token) {
               localStorage.setItem('token', token);

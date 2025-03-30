@@ -1,0 +1,44 @@
+/* Estilos para el spinner de carga */
+.animate-spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Estilos para los mensajes de feedback */
+  .bg-red-50 {
+    background-color: #fef2f2;
+  }
+  
+  .bg-green-50 {
+    background-color: #f0fdf4;
+  }
+  
+  /* Estilos para los botones */
+  button[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  /* Estilos para los íconos de validación */
+  .check-icon {
+    color: #10b981; /* Verde para éxito */
+  }
+  
+  .error-icon {
+    color: #ef4444; /* Rojo para errores */
+  }
+  
+  /* Transiciones suaves */
+  .transition {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }

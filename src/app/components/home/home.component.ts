@@ -8,6 +8,7 @@ import { Categoria } from "../../interfaces/categoria.interface"
 import { CategoriaServiceService } from "../../services/categoria-service.service"
 import { ProductosServiceService } from "../../services/productos-service.service"
 
+
 @Component({
   selector: "app-home",
   standalone: true,
@@ -178,5 +179,16 @@ export class HomeComponent implements OnInit {
     this.aplicarFiltros();
     console.log('Filtrando por categoría:', categoriaId);
   }
+
+
+
+  rutaRegistrarCategoria(){
+    this.router.navigate(['/registar-categoria']);
+  }
+
+
+
+
+
 }
 
