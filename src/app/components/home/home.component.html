@@ -1,92 +1,201 @@
 <div class="marketplace-container">
     <!-- Banner Principal -->
     <section class="hero-section">
-      <div class="container">
-        <h1 class="welcome-title">Venta de Productos Marck-PT-PPP</h1>
-        <p class="welcome-subtitle">Sube tus Productos y demuestralos a las personas que si les interesa</p>
+      <div class="hero-background"></div>
+      <div class="hero-content">
+        <h1 class="welcome-title animate__animated animate__fadeInDown">MMTK-MARQUET</h1>
+        <p class="welcome-subtitle animate__animated animate__fadeIn animate__delay-1s">Descubre, compra y vende productos que otros si necesitan</p>
 
+        <div class="hero-actions animate__animated animate__fadeInUp animate__delay-1s">
+          <button 
+            (click)="rutaRegistrarProducto()" 
+            class="action-button primary-action">
+            <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Registrar Nuevo Producto
+          </button>
 
-        <button 
-        (click)="rutaRegistrarProducto()" 
-        class="btn bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-        </svg>
-        Registrar Nuevo Producto
-      </button>
+          <button class="action-button secondary-action">
+            <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            </svg>
+            Explorar Categorías
+          </button>
+        </div>
 
-    </div>
+        <div class="hero-stats animate__animated animate__fadeIn animate__delay-2s">
+          <div class="stat-item">
+            <span class="stat-value">1000+</span>
+            <span class="stat-label">Nuestra meta de productos</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">500+</span>
+            <span class="stat-label">Nuestra meta de usuarios</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">24/7</span>
+            <span class="stat-label">Soporte</span>
+          </div>
+        </div>
+      </div>
     </section>
   
     <!-- Contenido Principal -->
-    <div class="filters-container">
+    <div class="main-content">
       <!-- Filtros y Ordenamiento -->
-      <div class="filters-section">
-        <div class="row">
-          <div class="col-md-8 mb-3 mb-md-0">
-            <div class="search-box">
-              <input type="text" class="form-control" placeholder="Buscar productos..." [(ngModel)]="searchTerm" (input)="buscarProductos($event)">
-            </div>
-
-            <button class="btn btn-secondary mt-4 py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" (click)="cerrarSesion()">
-                Cerrar Sesión
-              </button>
-
+      <div class="filters-container animate__animated animate__fadeIn animate__delay-1s">
+        <div class="filters-header">
+          <h2 class="section-title">Explora nuestros productos</h2>
+          <p class="section-subtitle">Encuentra lo que buscas con nuestros filtros</p>
+        </div>
+        
+        <div class="filters-section">
+          <div class="search-box">
+            <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            </svg>
+            <input 
+              type="text" 
+              class="search-input" 
+              placeholder="Buscar productos..." 
+              [(ngModel)]="searchTerm" 
+              (input)="buscarProductos($event)">
           </div>
-
           
-          <div class="col-md-4">
-            <select class="form-select" [(ngModel)]="sortOption" (change)="ordenarProductos($event)">
-              <option value="">Ordenar por</option>
-              <option value="precio-asc">Precio: Menor a Mayor</option>
-              <option value="precio-desc">Precio: Mayor a Menor</option>
-              <option value="recientes">Más Recientes</option>
-            </select>
+          <div class="filters-actions">
+            <div class="sort-container">
+              <label for="sort-select" class="sort-label">
+                <svg xmlns="http://www.w3.org/2000/svg" class="sort-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
+                </svg>
+              </label>
+              <select id="sort-select" class="sort-select" [(ngModel)]="sortOption" (change)="ordenarProductos($event)">
+                <option value="">Ordenar por</option>
+                <option value="precio-asc">Precio: Menor a Mayor</option>
+                <option value="precio-desc">Precio: Mayor a Menor</option>
+                <option value="recientes">Más Recientes</option>
+              </select>
+            </div>
+            
+            <button class="logout-button" (click)="cerrarSesion()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="logout-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm11 3a1 1 0 10-2 0v4.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L14 10.586V6z" clip-rule="evenodd" />
+              </svg>
+              Cerrar Sesión
+            </button>
           </div>
         </div>
+        
+        <div class="category-filters" >
+          <button class="category-pill" [class.active]="!categoriaSeleccionada" (click)="filtrarPorCategoria(null)">Todos</button>
+          <button *ngFor="let categoria of categorias" 
+                  class="category-pill" 
+                  [class.active]="categoriaSeleccionada === categoria.id"
+                  (click)="filtrarPorCategoria(categoria.id)">
+            {{categoria.nombre_categoria}}
+          </button>
+        </div>
       </div>
-    </div>
   
-    <div class="products-container">
+    <div class="products-container animate__animated animate__fadeIn animate__delay-1s">
       <!-- Grid de Productos -->
       <div class="products-grid">
-        <div *ngFor="let producto of productosFiltrados; let i = index">
+        <div *ngFor="let producto of productosFiltrados; let i = index" class="product-card-wrapper animate__animated animate__fadeInUp" [style.animation-delay]="(i * 0.1) + 's'">
           <div class="product-card">
-            <div class="product-badge new" *ngIf="i % 5 === 0">NUEVO</div>
-            <div class="product-image">
-              <img [src]="producto.imagen_producto" [alt]="producto.nombre_producto">
-            </div>
-            <div class="product-info">
-              <div class="product-category">{{getCategoryName(i)}}</div>
-              <h3 class="product-title">{{producto.nombre_producto}}</h3>
-              <p class="product-price">
-                $ {{producto.precio_producto | number:'1.2-2'}}
-                <span class="discount" *ngIf="i % 3 === 0">20% OFF</span>
-              </p>
-              <div class="shipping-free" *ngIf="i % 2 === 0">
-                <i class="bi bi-truck shipping-icon"></i>
+            <div class="product-badges">
+              <div class="product-badge new" *ngIf="i % 5 === 0">NUEVO</div>
+              <div class="product-badge discount" *ngIf="i % 3 === 0">20% OFF</div>
+              <div class="product-badge shipping" *ngIf="i % 2 === 0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="shipping-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                  <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1v-5h2.05a2.5 2.5 0 014.9 0H19a1 1 0 001-1v-4a1 1 0 00-.293-.707l-2-2A1 1 0 0017 2h-3a1 1 0 00-1 1v1H6a1 1 0 00-1 1v1H3a1 1 0 00-1 1zm7 8a2 2 0 012 2h-4a2 2 0 012-2z" />
+                </svg>
                 Envío gratis
               </div>
+            </div>
+            <div class="product-image">
+              <img [src]="producto.imagen_producto" [alt]="producto.nombre_producto">
+              <div class="product-actions">
+                <button class="action-button favorite">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="action-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+                <button class="action-button share">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="action-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-info">
+              <div class="product-category">{{getCategoryName(i, producto)}}</div>
+              <h3 class="product-title">{{producto.nombre_producto}}</h3>
+              <div class="product-rating">
+                <div class="stars">
+                  <svg *ngFor="let star of [1,2,3,4,5]" xmlns="http://www.w3.org/2000/svg" [class.filled]="star <= (i % 5 + 1)" class="star-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                </div>
+                <span class="reviews-count">({{(i % 50) + 5}})</span>
+              </div>
+              <p class="product-price">
+                $ {{producto.precio_producto | number:'1.2-2'}}
+                <span class="original-price" *ngIf="i % 3 === 0">$ {{(producto.precio_producto * 1.2) | number:'1.2-2'}}</span>
+              </p>
               <p class="product-description">{{producto.descripcion}}</p>
-              <button class="btn btn-primary" (click)="verDetalles(producto)">
-                Ver Detalles
-                <i class="bi bi-arrow-right btn-icon"></i>
-              </button>
+              <div class="product-buttons">
+                <button class="product-button details" (click)="verDetalles(producto)">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd" />
+                  </svg>
+                  Ver Detalles
+                </button>
+                <button class="product-button cart">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                  </svg>
+                  Añadir
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Mensaje si no hay productos -->
+      <div class="no-products" *ngIf="productosFiltrados.length === 0">
+        <svg xmlns="http://www.w3.org/2000/svg" class="empty-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd" />
+        </svg>
+        <h3>No se encontraron productos</h3>
+        <p>Intenta con otra búsqueda o explora otras categorías</p>
+      </div>
 
-  <!-- ... existing code ... -->
-
-  <!-- ... existing code ... -->
       <!-- Paginación -->
       <div class="pagination">
-        <div class="page-item" *ngFor="let page of [1,2,3,4,5]">
-          <button class="page-link" [class.active]="currentPage === page" (click)="cambiarPagina(page)">
+        <button class="pagination-arrow prev" [disabled]="currentPage === 1" (click)="cambiarPagina(currentPage - 1)">
+          <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        
+        <div class="page-numbers">
+          <button 
+            *ngFor="let page of [1,2,3,4,5]" 
+            class="page-number" 
+            [class.active]="currentPage === page" 
+            (click)="cambiarPagina(page)">
             {{page}}
           </button>
+        </div>
+        
+        <button class="pagination-arrow next" [disabled]="currentPage === 5" (click)="cambiarPagina(currentPage + 1)">
+          <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+        </button>
         </div>
       </div>
     </div>

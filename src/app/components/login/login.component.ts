@@ -32,11 +32,32 @@ export class LoginComponent {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe({
         next: (response) => {
-          console.log('Respuesta del servidor:', response.message);
-          if (response && response.status && response.token) {
+          console.log('Respuesta del servidor:', response);
+          if (response && response.status) {
             console.log('Login exitoso, guardando token...');
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('user', JSON.stringify(response.data));
+            // Guardar el token (puede estar en diferentes ubicaciones según la estructura de la respuesta)
+            const token = response.token || (response.data && response.data.token);
+            if (token) {
+              localStorage.setItem('token', token);
+            } else {
+              console.warn('No se encontró token en la respuesta');
+            }
+            
+            // Guardar el usuario correctamente
+            if (response.data) {
+              // Si la respuesta tiene una propiedad data, guardarla
+              localStorage.setItem('user', JSON.stringify(response.data));
+              console.log('Usuario guardado correctamente:', response.data);
+            } else {
+              // En caso de que la estructura sea diferente, guardar la respuesta completa
+              localStorage.setItem('user', JSON.stringify(response));
+              console.log('Usuario guardado correctamente:', response);
+              // Verificar si hay información del usuario
+              if (!response) {
+                console.error('No se recibió información del usuario en la respuesta');
+              }
+            }
+            
             console.log('Intentando navegar al dashboard...');
             this.router.navigate(['/dashboard'])
               .then(() => console.log('Navegación exitosa al dashboard'))

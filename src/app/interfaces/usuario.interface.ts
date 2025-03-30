@@ -6,11 +6,9 @@ export  interface Usuario{
     password:string;
     token:string;
 }
-
-
-
 export interface UsuarioResponse{
 
+    id:number;
     status:boolean;
     message:string;
     data:Usuario;

@@ -5,13 +5,12 @@ export interface Producto {
     descripcion: string;
     imagen_producto: string;
     usuario_id: number;
-    data : ProductosResponse;
+    categoria_id?: number;
+    categoria?: {
+        id: number;
+        nombre_categoria: string;
+    };
 }
-
-
-
-
-
 
 
 export interface ProductosResponse {

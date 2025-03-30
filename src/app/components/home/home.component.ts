@@ -1,10 +1,12 @@
 import { Component, type OnInit } from "@angular/core"
-import { ApiService } from "../../services/api.service"
 import { CommonModule } from "@angular/common"
 import { Producto } from "../../interfaces/producto.interface"
 import { RouterModule } from "@angular/router"
 import { FormsModule } from "@angular/forms"
 import { Router } from "@angular/router"
+import { Categoria } from "../../interfaces/categoria.interface"
+import { CategoriaServiceService } from "../../services/categoria-service.service"
+import { ProductosServiceService } from "../../services/productos-service.service"
 
 @Component({
   selector: "app-home",
@@ -19,30 +21,24 @@ export class HomeComponent implements OnInit {
   searchTerm = ""
   sortOption = ""
   currentPage = 1
-  categorias: string[] = [
-    "ELECTRÓNICA",
-    "HOGAR Y MUEBLES",
-    "DEPORTES Y FITNESS",
-    "TECNOLOGÍA",
-    "ROPA Y ACCESORIOS",
-    "JUGUETES Y JUEGOS",
-    "HERRAMIENTAS",
-    "ELECTRODOMÉSTICOS",
-  ]
+  categorias: Categoria[] = []
+  categoriaSeleccionada: number | null = null
 
-  
-
-
-
-  constructor(private apiService: ApiService , private router :Router ) {}
+  constructor(private productoService: ProductosServiceService , private router :Router, private categoriaService: CategoriaServiceService ) {}
 
   ngOnInit(): void {
     this.cargarProductos()
+    this.cargarCategorias()
   }
 
   cargarProductos(): void {
-    this.apiService.obtenerProductos().subscribe({
+    this.productoService.obtenerProductos().subscribe({
       next: (productos: Producto[]) => {
+        console.log('Productos recibidos:', productos);
+        if (productos && productos.length > 0) {
+          console.log('Primer producto:', productos[0]);
+          console.log('Propiedades del producto:', Object.keys(productos[0]));
+        }
         this.productos = productos
         this.productosFiltrados = productos
         this.aplicarFiltros()
@@ -80,6 +76,21 @@ export class HomeComponent implements OnInit {
       )
     }
 
+    // Aplicar filtro por categoría
+    if (this.categoriaSeleccionada !== null) {
+      productosFiltrados = productosFiltrados.filter(producto => {
+        // Si el producto tiene una categoría directamente asociada
+        if (producto.categoria && producto.categoria.id === this.categoriaSeleccionada) {
+          return true;
+        }
+        // Si el producto tiene un categoria_id
+        if (producto.categoria_id === this.categoriaSeleccionada) {
+          return true;
+        }
+        return false;
+      });
+    }
+
     // Aplicar ordenamiento
     switch (this.sortOption) {
       case "precio-asc":
@@ -107,8 +118,27 @@ export class HomeComponent implements OnInit {
     console.log("Cambiando a página:", page)
   }
 
-  getCategoryName(index: number): string {
-    return this.categorias[index % this.categorias.length]
+  getCategoryName(index: number, producto: Producto): string {
+    // Si el producto tiene una categoría directamente asociada, mostrarla
+    if (producto.categoria && producto.categoria.nombre_categoria) {
+      return producto.categoria.nombre_categoria;
+    }
+    
+    // Si el producto tiene un categoria_id, buscar la categoría correspondiente
+    if (producto.categoria_id && this.categorias && this.categorias.length > 0) {
+      const categoria = this.categorias.find(cat => cat.id === producto.categoria_id);
+      if (categoria) {
+        return categoria.nombre_categoria;
+      }
+    }
+    
+    // Si no hay categoría asociada, usar el método anterior como fallback
+    if (this.categorias && this.categorias.length > 0) {
+      const categoryIndex = index % this.categorias.length;
+      return this.categorias[categoryIndex].nombre_categoria;
+    }
+    
+    return 'Categoría no disponible';
   }
 
 
@@ -121,14 +151,32 @@ export class HomeComponent implements OnInit {
 
 
   rutaRegistrarProducto(){
-
     this.router.navigate(['/registrar-producto']);
-
-
   }
 
+  cargarCategorias(): void {
+    this.categoriaService.obtenerCategorias().subscribe({
+      next: (categorias: Categoria[]) => {
+        console.log('Categorías recibidas:', categorias);
+        if (categorias && categorias.length > 0) {
+          console.log('Primera categoría:', categorias[0]);
+          console.log('Propiedades de la categoría:', Object.keys(categorias[0]));
+        }
+        this.categorias = categorias;
+      },
+      error: (error: any) => {
+        console.error("Error al obtener categorías:", error);
+        if (error.status === 0) {
+          console.error("No se pudo conectar con el servidor. Verifica que el backend esté corriendo.");
+        }
+      }
+    });
+  }
 
-
-
+  filtrarPorCategoria(categoriaId: number | null): void {
+    this.categoriaSeleccionada = categoriaId;
+    this.aplicarFiltros();
+    console.log('Filtrando por categoría:', categoriaId);
+  }
 }
 
