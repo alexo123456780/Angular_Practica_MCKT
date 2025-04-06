@@ -33,8 +33,8 @@ export class AutServiceService {
     )
   }
 
-  registro(nombre:string ,email:string , password:string): Observable<UsuarioResponse> {
-    return this.http.post<UsuarioResponse>(`${this.apiGlobal}/register`, {nombre,email,password}).pipe(
+  registro(nombre:string ,email:string , password:string , perfil_usuario:string): Observable<UsuarioResponse> {
+    return this.http.post<UsuarioResponse>(`${this.apiGlobal}/register`, {nombre,email,password,perfil_usuario}).pipe(
 
       map(response =>{
 

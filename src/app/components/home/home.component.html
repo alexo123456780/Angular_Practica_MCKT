@@ -4,7 +4,15 @@
       <div class="hero-background"></div>
       <div class="hero-content">
         <h1 class="welcome-title animate__animated animate__fadeInDown">MMTK-MARQUET</h1>
-        <p class="welcome-subtitle animate__animated animate__fadeIn animate__delay-1s">Descubre, compra y vende productos que otros si necesitan</p>
+        <div class="user-profile animate__animated animate__fadeIn animate__delay-1s flex items-center gap-3 mb-4">
+          <div class="profile-image-container h-12 w-12 rounded-full overflow-hidden border-2 border-white shadow-lg">
+            <img *ngIf="perfilUsuario" [src]="perfilUsuario" alt="Foto de perfil" class="h-full w-full object-cover">
+            <div *ngIf="!perfilUsuario" class="h-full w-full bg-gradient-to-br from-pink-400 to-orange-300 flex items-center justify-center text-white font-bold text-xl">
+              {{nombreUsuario.charAt(0).toUpperCase()}}
+            </div>
+          </div>
+          <p class="welcome-subtitle">Bienvenido {{nombreUsuario}}. ¿Qué productos vas a vender hoy?</p>
+        </div>
 
         <div class="hero-actions animate__animated animate__fadeInUp animate__delay-1s">
           <button 
@@ -13,7 +21,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>
-            Registrar Nuevo Producto
+            Vende tu producto
           </button>
 
 
@@ -102,14 +110,25 @@
           </div>
         </div>
         
-        <div class="category-filters" >
-          <button class="category-pill" [class.active]="!categoriaSeleccionada" (click)="filtrarPorCategoria(null)">Todos</button>
-          <button *ngFor="let categoria of categorias" 
-                  class="category-pill" 
-                  [class.active]="categoriaSeleccionada === categoria.id"
-                  (click)="filtrarPorCategoria(categoria.id)">
-            {{categoria.nombre_categoria}}
-          </button>
+        <div class="category-section">
+          <h3 class="section-subtitle mb-4">Categorías</h3>
+          <div class="categories-grid">
+            <div class="category-card" [class.active]="!categoriaSeleccionada" (click)="filtrarPorCategoria(null)">
+              <div class="category-image-container">
+                <img src="https://mensandbeauty.com/wp-content/uploads/2019/07/moda-para-hombre-prendas-calzado-ropa-complementos-accesorios-4.jpg" alt="Todas las categorías" class="category-image">
+              </div>
+              <p class="category-name">Todos</p>
+            </div>
+            <div *ngFor="let categoria of categorias" 
+                class="category-card" 
+                [class.active]="categoriaSeleccionada === categoria.id"
+                (click)="filtrarPorCategoria(categoria.id)">
+              <div class="category-image-container">
+                <img [src]="categoria.imagen_categoria" [alt]="categoria.nombre_categoria" class="category-image">
+              </div>
+              <p class="category-name">{{categoria.nombre_categoria}}</p>
+            </div>
+          </div>
         </div>
       </div>
   
@@ -157,22 +176,9 @@
               </div>
               <p class="product-price">
                 $ {{producto.precio_producto | number:'1.2-2'}}
-                <span class="original-price" *ngIf="i % 3 === 0">$ {{(producto.precio_producto * 1.2) | number:'1.2-2'}}</span>
               </p>
               <p class="product-description">{{producto.descripcion}}</p>
               <div class="product-buttons">
-                <button class="product-button details" (click)="verDetalles(producto)">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd" />
-                  </svg>
-                  Ver Detalles
-                </button>
-                <button class="product-button cart">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-                  </svg>
-                  Añadir
-                </button>
               </div>
             </div>
           </div>

@@ -3,6 +3,7 @@ export  interface Usuario{
     id:number;
     nombre:string;
     email:string;
+    perfil_usuario?:string;
     password:string;
     token:string;
 }

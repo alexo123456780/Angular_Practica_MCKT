@@ -15,6 +15,8 @@ import { AutServiceService } from '../../services/aut-service.service';
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
+  estaCargando : boolean = false;
+  mensajeExito: string = "";
 
   constructor(
     private fb: FormBuilder,
@@ -29,9 +31,16 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
+
+      this.estaCargando = true;
+
+      this.errorMessage = '';
+     
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe({
         next: (response) => {
+
+          this.estaCargando = false;
           console.log('Respuesta del servidor:', response);
           if (response && response.status) {
             console.log('Login exitoso, guardando token...');
@@ -58,15 +67,22 @@ export class LoginComponent {
             }
             
             console.log('Intentando navegar al dashboard...');
-            this.router.navigate(['/dashboard'])
-              .then(() => console.log('Navegación exitosa al dashboard'))
-              .catch(err => console.error('Error en la navegación:', err));
+
+
+            setTimeout(()=>{
+
+              this.router.navigate(['/dashboard']);
+              this.mensajeExito = "Inicio de sesión exitoso";
+
+            },1500)
+            
           } else {
             console.error('Respuesta inválida del servidor:', response);
             this.errorMessage = response.message || 'Error en la respuesta del servidor';
           }
         },
         error: (error) => {
+          this.estaCargando = false;
           console.error('Error detallado de login:', error);
           this.errorMessage = error.error?.message || 'Error al iniciar sesión. Por favor, intente nuevamente.';
         }

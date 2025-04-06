@@ -1,6 +1,7 @@
 export interface Categoria{
     id:number,
-    nombre_categoria:string
+    nombre_categoria:string,
+    imagen_categoria:string,
 
 }
 

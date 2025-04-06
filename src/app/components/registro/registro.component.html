@@ -81,6 +81,78 @@
             </div>
           </div>
 
+          <div class="space-y-2">
+            <div class="mb-4">
+              <label class="block text-gray-700 text-sm font-bold mb-2">Foto de perfil</label>
+              <div class="flex space-x-4 mb-2">
+                <div class="flex items-center">
+                  <input 
+                    type="radio" 
+                    id="url_option" 
+                    value="url" 
+                    formControlName="upload_type" 
+                    class="mr-2"
+                  />
+                  <label for="url_option" class="text-gray-700">URL de imagen</label>
+                </div>
+                <div class="flex items-center">
+                  <input 
+                    type="radio" 
+                    id="file_option" 
+                    value="file" 
+                    formControlName="upload_type" 
+                    class="mr-2"
+                  />
+                  <label for="file_option" class="text-gray-700">Subir imagen</label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Campo para URL -->
+            <div class="relative" *ngIf="uploadType === 'url'">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                id="perfil_usuario"
+                formControlName="perfil_usuario"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-primary-200 bg-white/80 hover:bg-white/90 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block transition-all duration-200 ease-in-out backdrop-blur-sm text-gray-800 placeholder-gray-500 hover:scale-[1.01] hover:shadow-lg"
+                [ngClass]="{'border-red-500 focus:ring-red-500 focus:border-red-500': registroForm.get('perfil_usuario')?.invalid && registroForm.get('perfil_usuario')?.touched && uploadType === 'url',
+                          'border-gray-300': !(registroForm.get('perfil_usuario')?.invalid && registroForm.get('perfil_usuario')?.touched && uploadType === 'url')}"
+                placeholder="URL de tu foto de perfil"
+              />
+            </div>
+            
+            <!-- Campo para subir archivo -->
+            <div class="space-y-2" *ngIf="uploadType === 'file'">
+              <div class="flex flex-col items-center justify-center w-full">
+                <label for="file-upload" class="flex flex-col items-center justify-center w-full h-32 border-2 border-primary-200 border-dashed rounded-lg cursor-pointer bg-white/80 hover:bg-white/90 hover:scale-[1.01] hover:shadow-lg transition-all duration-200">
+                  <div class="flex flex-col items-center justify-center pt-5 pb-6" *ngIf="!imagePreview">
+                    <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                    </svg>
+                    <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Haz clic para subir</span> o arrastra y suelta</p>
+                    <p class="text-xs text-gray-500">PNG, JPG o JPEG</p>
+                  </div>
+                  <img *ngIf="imagePreview" [src]="imagePreview" class="h-28 object-contain" alt="Vista previa de imagen">
+                </label>
+                <input 
+                  id="file-upload" 
+                  type="file" 
+                  class="hidden" 
+                  accept="image/*"
+                  (change)="onFileSelected($event)"
+                />
+              </div>
+            </div>
+            <div class="text-sm text-red-500 h-5 animate-[fadeIn_0.3s_ease-out]" *ngIf="registroForm.get('perfil_usuario')?.invalid && registroForm.get('perfil_usuario')?.touched">
+              <span *ngIf="registroForm.get('perfil_usuario')?.errors?.['required']">La URL de la foto de perfil es requerida</span>
+            </div>
+          </div>
+
           <div class="h-5">
             <div class="text-sm text-red-500 animate-[shakeError_0.5s_ease-in-out]" *ngIf="errorMessage">
               {{ errorMessage }}

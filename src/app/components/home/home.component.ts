@@ -24,12 +24,16 @@ export class HomeComponent implements OnInit {
   currentPage = 1
   categorias: Categoria[] = []
   categoriaSeleccionada: number | null = null
+  nombreUsuario: string = '';
+  perfilUsuario: string = '';
+  imagenCategoria: string = '';
 
   constructor(private productoService: ProductosServiceService , private router :Router, private categoriaService: CategoriaServiceService ) {}
 
   ngOnInit(): void {
     this.cargarProductos()
     this.cargarCategorias()
+    this.obtenerNombreUsuario();
   }
 
   cargarProductos(): void {
@@ -164,6 +168,7 @@ export class HomeComponent implements OnInit {
           console.log('Propiedades de la categoría:', Object.keys(categorias[0]));
         }
         this.categorias = categorias;
+        this.imagenCategoria = categorias[0].imagen_categoria;
       },
       error: (error: any) => {
         console.error("Error al obtener categorías:", error);
@@ -187,8 +192,31 @@ export class HomeComponent implements OnInit {
   }
 
 
+  
 
 
+  obtenerNombreUsuario(): void {
+
+
+    const userData = localStorage.getItem('user');
+
+    if(userData && userData !== 'undefined'){
+
+
+      const usuario = JSON.parse(userData);
+
+
+      if(usuario && usuario.user.nombre && usuario.user.perfil_usuario){
+
+        this.nombreUsuario = usuario.user.nombre;
+
+        this.perfilUsuario = usuario.user.perfil_usuario;
+      }
+
+    
+    }
+
+  }
 
 }
 

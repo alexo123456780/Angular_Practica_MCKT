@@ -70,9 +70,30 @@
     .welcome-subtitle {
       font-size: 1.25rem;
       font-weight: 400;
-      margin-bottom: 2rem;
+      margin-bottom: 0.5rem;
       max-width: 600px;
       opacity: 0.9;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      
+      .profile-image-container {
+        height: 3rem;
+        width: 3rem;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        
+        img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+      }
     }
     
     .hero-actions {
@@ -781,6 +802,173 @@
   @media (max-width: 576px) {
     .products-grid {
       grid-template-columns: 1fr;
+    }
+  }
+  
+  // Estilos para la sección de categorías
+  .category-section {
+    margin-bottom: 2.5rem;
+    background-color: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    
+    .section-subtitle {
+      text-align: center;
+      font-weight: 700;
+      color: #333;
+      font-size: 1.2rem;
+      position: relative;
+      display: inline-block;
+      margin: 0 auto;
+      padding-bottom: 0.5rem;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(90deg, #4a90e2, #5cb85c);
+        border-radius: 3px;
+      }
+    }
+  }
+  
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    @media (max-width: 576px) {
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+  }
+  
+  .category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 16px;
+    padding: 1.25rem 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(92, 184, 92, 0.1));
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 0;
+    }
+    
+    &:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+      
+      &::before {
+        opacity: 1;
+      }
+      
+      .category-image-container {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+      
+      .category-name {
+        transform: translateY(3px);
+        color: #4a90e2;
+      }
+    }
+    
+    &.active {
+      background: linear-gradient(135deg, #4a90e2, #5cb85c);
+      color: white;
+      box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+      
+      &::before {
+        opacity: 0;
+      }
+      
+      .category-image-container {
+        border: 3px solid rgba(255, 255, 255, 0.8);
+        transform: scale(1.05);
+      }
+      
+      .category-name {
+        font-weight: 600;
+        transform: translateY(3px);
+      }
+    }
+    
+    .category-image-container {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f9fa;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border: 2px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.4s ease;
+      position: relative;
+      z-index: 1;
+      
+      @media (max-width: 768px) {
+        width: 65px;
+        height: 65px;
+      }
+      
+      @media (max-width: 576px) {
+        width: 60px;
+        height: 60px;
+      }
+    }
+    
+    .category-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .category-name {
+      font-size: 1rem;
+      font-weight: 500;
+      text-align: center;
+      margin: 0;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+      
+      @media (max-width: 768px) {
+        font-size: 0.95rem;
+      }
+      
+      @media (max-width: 576px) {
+        font-size: 0.9rem;
+      }
     }
   }
   

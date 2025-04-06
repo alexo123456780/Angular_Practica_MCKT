@@ -25,7 +25,9 @@ export class RegistrarCategoriaComponent {
   constructor(private fb:FormBuilder , private categoriaService:CategoriaServiceService, private router:Router){
     this.formularioCategoria = this.fb.group({
 
-      nombre_categoria: ['',[Validators.required,Validators.minLength(5)]]
+      nombre_categoria: ['',[Validators.required,Validators.minLength(5)]],
+      imagen_categoria: ['',[Validators.required]]
+
 
     })
 
@@ -44,6 +46,7 @@ export class RegistrarCategoriaComponent {
       const categoriaNueva: Categoria = {
 
         id :0,
+        imagen_categoria:this.formularioCategoria.value.imagen_categoria,
         nombre_categoria: this.formularioCategoria.value.nombre_categoria
         
 
