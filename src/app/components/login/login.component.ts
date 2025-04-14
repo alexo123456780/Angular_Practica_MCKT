@@ -1,95 +1,128 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ReactiveFormsModule,FormBuilder,FormGroup,Validators, } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { Usuario } from '../../interfaces/usuario.interface';
 import { AutServiceService } from '../../services/aut-service.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule,RouterModule],
+  imports: [ReactiveFormsModule,RouterModule,CommonModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  loginForm: FormGroup;
-  errorMessage: string = '';
-  estaCargando : boolean = false;
-  mensajeExito: string = "";
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AutServiceService,
-    private router: Router
-  ) {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
+  formulario: FormGroup;
+  errorMensaje: string = '';
+  estaCargando: boolean = false;
+  mensajeExito: string = '';
+
+
+  constructor(private fb:FormBuilder, private router:Router , private authService:AutServiceService){
+
+    this.formulario = this.fb.group({
+
+      email:['',[Validators.required, Validators.email]],
+      password: ['',[Validators.required, Validators.minLength(4)]]
+    })
   }
 
-  onSubmit() {
-    if (this.loginForm.valid) {
+
+  login(){
+
+    const usuario: Usuario = {
+      ...this.formulario.value
+    }
+
+    if(this.formulario.valid){
 
       this.estaCargando = true;
+      this.errorMensaje = '';
 
-      this.errorMessage = '';
-     
-      const { email, password } = this.loginForm.value;
-      this.authService.login(email, password).subscribe({
-        next: (response) => {
+
+      this.authService.login(usuario).subscribe({
+
+        next: (response) =>{
 
           this.estaCargando = false;
-          console.log('Respuesta del servidor:', response);
-          if (response && response.status) {
-            console.log('Login exitoso, guardando token...');
-            const token = response.token || (response.data && response.data.token);
-            if (token) {
+          this.mensajeExito = 'Login exitoso...'
+          console.log('Respuesta del login:',response.message);
+
+
+          if(response){
+
+            console.log('Login exitoso guardando el token...');
+
+            const token = response.token;
+
+
+            if(token){
+
+              console.log('Guardando token...');
               localStorage.setItem('token', token);
-            } else {
-              console.warn('No se encontró token en la respuesta');
+              console.log('Token guardado correctamente')
+            }else{
+
+              console.log('No se encontro el token')
+              this.router.navigate(['/login']);
+
             }
-            
-            // Guardar el usuario correctamente
-            if (response.data) {
-              // Si la respuesta tiene una propiedad data, guardarla
-              localStorage.setItem('user', JSON.stringify(response.data));
-              console.log('Usuario guardado correctamente:', response.data);
-            } else {
-              // En caso de que la estructura sea diferente, guardar la respuesta completa
-              localStorage.setItem('user', JSON.stringify(response));
-              console.log('Usuario guardado correctamente:', response);
-              // Verificar si hay información del usuario
-              if (!response) {
-                console.error('No se recibió información del usuario en la respuesta');
-              }
+
+            if(response.data){
+
+              console.log('Guardando datos del usuario...');
+              localStorage.setItem('data',JSON.stringify(response.data));
+              console.log('Usuario guardado correctamente',JSON.stringify(response.data,null,2));
+
+          
             }
-            
-            console.log('Intentando navegar al dashboard...');
+
+            if(!response){
+
+              console.log('No hay info del usuario');
+            }
 
 
-            setTimeout(()=>{
+            console.log('Navegando al dashboard...');
+
+            setTimeout(() =>{
 
               this.router.navigate(['/dashboard']);
-              this.mensajeExito = "Inicio de sesión exitoso";
+              this.mensajeExito = 'Login exitoso'
 
             },1500)
-            
-          } else {
-            console.error('Respuesta inválida del servidor:', response);
-            this.errorMessage = response.message || 'Error en la respuesta del servidor';
+
+          }else{
+
+            console.log('Ocurrio un error al momento de iniciar sesion', response);
+            this.errorMensaje = 'Error de login'
+
           }
+
+
+
         },
-        error: (error) => {
+
+        error: (error) =>{
           this.estaCargando = false;
-          console.error('Error detallado de login:', error);
-          this.errorMessage = error.error?.message || 'Error al iniciar sesión. Por favor, intente nuevamente.';
+          this.errorMensaje = 'Credenciales invalidas intente de nuevo porfavor'
+          console.error('Credenciales invalidas: ',JSON.stringify(error,null,2));
+
         }
-      });
-    } else {
-      console.log('Formulario inválido:', this.loginForm.errors);
-      this.errorMessage = 'Por favor, complete todos los campos correctamente.';
+
+      })
+
+
+    }else{
+
+      console.log('Formulario Invalido',this.formulario.errors);
+      this.errorMensaje = 'Complete todos los campos requeridos'
     }
   }
+
+
+ 
 }

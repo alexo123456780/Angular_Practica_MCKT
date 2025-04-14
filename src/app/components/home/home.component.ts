@@ -1,222 +1,351 @@
-import { Component, type OnInit } from "@angular/core"
-import { CommonModule } from "@angular/common"
-import { Producto } from "../../interfaces/producto.interface"
-import { RouterModule } from "@angular/router"
-import { FormsModule } from "@angular/forms"
+import { Component , type OnInit} from "@angular/core"
 import { Router } from "@angular/router"
+import { RouterModule } from "@angular/router"
+import { CommonModule } from "@angular/common"
+import { ProductosServiceService } from "../../services/productos-service.service"
+import { Producto } from "../../interfaces/producto.interface"
 import { Categoria } from "../../interfaces/categoria.interface"
 import { CategoriaServiceService } from "../../services/categoria-service.service"
-import { ProductosServiceService } from "../../services/productos-service.service"
-
+import { FormsModule } from "@angular/forms"
 
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule,RouterModule,FormsModule],
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.scss"],
 })
-export class HomeComponent implements OnInit {
-  productos: Producto[] = []
-  productosFiltrados: Producto[] = []
-  searchTerm = ""
-  sortOption = ""
-  currentPage = 1
-  categorias: Categoria[] = []
-  categoriaSeleccionada: number | null = null
-  nombreUsuario: string = '';
-  perfilUsuario: string = '';
-  imagenCategoria: string = '';
 
-  constructor(private productoService: ProductosServiceService , private router :Router, private categoriaService: CategoriaServiceService ) {}
+export class HomeComponent implements OnInit {
+
+  nombre_usuario: string = '';
+  perfil_usuario:string = '';
+  imagen_categoria:string = '';
+  busqueda: string = '';
+  productos: Producto[] = [];
+  categorias : Categoria[] = [];
+  productoFiltrado: Producto[] = [];
+  mensajeError: string = '';
+  categoriaSeleccionada: number | null  = null;
+  ordenActual: string = 'nombre_asc';
+
+  constructor(private productoService:ProductosServiceService, private categoriaService:CategoriaServiceService, private router:Router ){}
 
   ngOnInit(): void {
-    this.cargarProductos()
-    this.cargarCategorias()
-    this.obtenerNombreUsuario();
+
+    this.obtenerProductos();
+    this.cargarCategorias();
+    this.obtenerInfoUsuario();
+    
   }
 
-  cargarProductos(): void {
+  
+
+  obtenerProductos():void{
+
     this.productoService.obtenerProductos().subscribe({
-      next: (productos: Producto[]) => {
-        console.log('Productos recibidos:', productos);
-        if (productos && productos.length > 0) {
-          console.log('Primer producto:', productos[0]);
-          console.log('Propiedades del producto:', Object.keys(productos[0]));
+
+      next: (response) =>{
+
+        if(response){
+
+          console.log('Productos obtenidos correctamente',JSON.stringify(response.data,null,2));
+
+          this.productos = response.data
+
+          //nota: el operador spread [...algo] se usa para hacer una copia del array original y evitar hacer cambios en la original.
+          this.productoFiltrado = [...this.productos];
+
+          console.log('Productos:', this.productos)
+
+        }else{
+
+          console.log('Error al obtener los productos',JSON.stringify(response,null,2));
         }
-        this.productos = productos
-        this.productosFiltrados = productos
-        this.aplicarFiltros()
+
+
       },
-      error: (error: any) => {
-        console.error("Error al obtener productos:", error)
-        if (error.status === 0) {
-          console.error("No se pudo conectar con el servidor. Verifica que el backend esté corriendo.")
-        }
-      },
+
+      error: (error) =>{
+
+        this.mensajeError = 'Error al obtener los productos';
+        console.log('Error al obtener los productos', JSON.stringify(error,null,2));
+
+      }
     })
   }
 
+  cargarCategorias():void{
 
- 
-  buscarProductos(event: any): void {
-    this.searchTerm = event.target.value
-    this.aplicarFiltros()
+    this.categoriaService.obtenerCategorias().subscribe({
+
+      next: (response) =>{
+
+        if(response && response.data){
+
+          console.log('Categorias obtenidas correctamente', JSON.stringify(response.data,null,2));
+          this.categorias = response.data;
+          this.imagen_categoria = response.data[0].imagen_categoria
+          console.log('Categorias: ',this.categorias);
+
+        }
+
+        if(response.data.length === 0){
+
+          console.log('No hay categorias aun en la base de datos');
+
+        }
+
+        if(!response){
+
+          console.log('Ocurrio un error en el service de categorias');
+        }
+
+      },
+
+      error: (error) =>{
+
+        this.mensajeError = 'Error al obtener las categorias';
+        console.log('Ocurrio un error en la solicitud', JSON.stringify(error,null,2));
+
+      }
+    })
+
+
   }
 
-  ordenarProductos(event: any): void {
-    this.sortOption = event.target.value
-    this.aplicarFiltros()
+
+  obtenerInfoUsuario():void{
+
+    const usuario = localStorage.getItem('data');
+
+    if(usuario && usuario !== 'undefined'){
+
+      const datosUsuario = JSON.parse(usuario);
+
+      if(datosUsuario){
+
+        console.log('Nombre del Usuario',datosUsuario.nombre);
+        console.log('Perfil_Usuario: ',datosUsuario.perfil_usuario);
+
+        this.nombre_usuario = datosUsuario.nombre;
+        this.perfil_usuario = datosUsuario.perfil_usuario;
+
+
+      }
+    }else{
+
+      console.log('No hay informacion del usuario, has login..');
+      this.router.navigate(['/login']);
+    }
   }
 
-  aplicarFiltros(): void {
-    let productosFiltrados = [...this.productos]
 
-    // Aplicar búsqueda
-    if (this.searchTerm) {
-      productosFiltrados = productosFiltrados.filter(
-        (producto) =>
-          producto.nombre_producto.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          producto.descripcion.toLowerCase().includes(this.searchTerm.toLowerCase()),
+  buscarProductos(event:Event):void{
+
+    const inputBusqueda = event.target as HTMLInputElement;
+
+    this.busqueda = inputBusqueda.value;
+
+    this.aplicarFiltros();
+
+  }
+
+  filtrarPorCategoria(categoriaId:any):void{
+
+    this.categoriaSeleccionada = categoriaId;
+
+    this.aplicarFiltros();
+
+  }
+
+  ordenarProductos(event:any):void{
+
+    this.ordenActual = event.target.value;
+    this.aplicarFiltros();
+
+  }
+
+
+
+
+
+  aplicarFiltros():void{
+
+    let productosFinalesFiltrados = [...this.productos];
+
+    //filtro de busquede
+
+
+    if(this.busqueda){
+
+      productosFinalesFiltrados = productosFinalesFiltrados.filter((producto) =>
+      producto.nombre_producto.toLowerCase().includes(this.busqueda.toLowerCase())||
+      producto.descripcion.toLowerCase().includes(this.busqueda.toLowerCase())
+    
       )
     }
 
-    // Aplicar filtro por categoría
-    if (this.categoriaSeleccionada !== null) {
-      productosFiltrados = productosFiltrados.filter(producto => {
-        // Si el producto tiene una categoría directamente asociada
-        if (producto.categoria && producto.categoria.id === this.categoriaSeleccionada) {
-          return true;
-        }
-        // Si el producto tiene un categoria_id
-        if (producto.categoria_id === this.categoriaSeleccionada) {
-          return true;
-        }
-        return false;
-      });
+    if(this.categoriaSeleccionada){
+
+      productosFinalesFiltrados = productosFinalesFiltrados.filter((producto) => producto.categoria_id === this.categoriaSeleccionada)
+
     }
 
-    // Aplicar ordenamiento
-    switch (this.sortOption) {
-      case "precio-asc":
-        productosFiltrados.sort((a, b) => a.precio_producto - b.precio_producto)
-        break
-      case "precio-desc":
-        productosFiltrados.sort((a, b) => b.precio_producto - a.precio_producto)
-        break
-      case "recientes":
-        productosFiltrados.reverse()
-        break
+    switch(this.ordenActual){
+
+      case 'precio_asc':
+      productosFinalesFiltrados.sort((a,b) => a.precio_producto - b.precio_producto);
+      break;
+      
+      case 'precio_desc':
+      productosFinalesFiltrados.sort((a,b) => b.precio_producto - a.precio_producto);
+      break;
+      
+      case 'nombre_asc':
+      productosFinalesFiltrados.sort((a,b) => a.nombre_producto.localeCompare(b.nombre_producto));
+      break;
+      
+      case 'nombre_desc':
+      productosFinalesFiltrados.sort((a,b) => b.nombre_producto.localeCompare(a.nombre_producto));  
+      break;
+
+      default:
+      console.log('Ordenamiento por defecto');
+      break;  
+
     }
 
-    this.productosFiltrados = productosFiltrados
-  }
+    this.productoFiltrado = productosFinalesFiltrados;
 
-  verDetalles(producto: Producto): void {
-    // Implementar navegación a la página de detalles
-    console.log("Ver detalles del producto:", producto)
-  }
-
-  cambiarPagina(page: number): void {
-    this.currentPage = page
-    // Aquí implementarías la lógica de paginación real
-    console.log("Cambiando a página:", page)
-  }
-
-  getCategoryName(index: number, producto: Producto): string {
-    // Si el producto tiene una categoría directamente asociada, mostrarla
-    if (producto.categoria && producto.categoria.nombre_categoria) {
-      return producto.categoria.nombre_categoria;
-    }
-    
-    // Si el producto tiene un categoria_id, buscar la categoría correspondiente
-    if (producto.categoria_id && this.categorias && this.categorias.length > 0) {
-      const categoria = this.categorias.find(cat => cat.id === producto.categoria_id);
-      if (categoria) {
-        return categoria.nombre_categoria;
-      }
-    }
-    
-    // Si no hay categoría asociada, usar el método anterior como fallback
-    if (this.categorias && this.categorias.length > 0) {
-      const categoryIndex = index % this.categorias.length;
-      return this.categorias[categoryIndex].nombre_categoria;
-    }
-    
-    return 'Categoría no disponible';
   }
 
 
-  cerrarSesion(): void {
-    console.log("Se ha cerrado la sesion correctamente");
-    localStorage.removeItem("token")
-    localStorage.removeItem("usuario")
-    this.router.navigate(['/login'])
+  limpiarFiltros():void{
+
+    this.busqueda = '';
+    this.categoriaSeleccionada = null;
+    this.ordenActual = 'nombre_asc';
+    this.productoFiltrado = [...this.productos];
+
   }
 
 
-  rutaRegistrarProducto(){
+  verDetallesProducto(producto_id:number){
+
+    if(producto_id){
+      console.log('Navegando ala descripcion del producto...')
+      this.router.navigate(['detalles-producto',producto_id])
+    }else{
+
+      console.log('No se encontro el id del producto');
+    }
+
+  }
+
+  navegarARegistrarProducto(): void {
+    console.log('Navegando a registrar producto...');
     this.router.navigate(['/registrar-producto']);
   }
 
-  cargarCategorias(): void {
-    this.categoriaService.obtenerCategorias().subscribe({
-      next: (categorias: Categoria[]) => {
-        console.log('Categorías recibidas:', categorias);
-        if (categorias && categorias.length > 0) {
-          console.log('Primera categoría:', categorias[0]);
-          console.log('Propiedades de la categoría:', Object.keys(categorias[0]));
-        }
-        this.categorias = categorias;
-        this.imagenCategoria = categorias[0].imagen_categoria;
-      },
-      error: (error: any) => {
-        console.error("Error al obtener categorías:", error);
-        if (error.status === 0) {
-          console.error("No se pudo conectar con el servidor. Verifica que el backend esté corriendo.");
-        }
+  navegarARegistrarCategoria(): void {
+    console.log('Navegando a registrar categoría...');
+    this.router.navigate(['/registrar-categoria']);
+  }
+
+
+  cerrarSesion():void{
+
+    localStorage.removeItem('data');
+    localStorage.removeItem('token');
+
+    console.log('Sesion cerrada correctamente');
+
+
+    setTimeout(() =>{
+
+      this.router.navigate(['/login']);
+
+
+    })
+
+
+  }
+
+
+  obtenerNombreCategoria(index:number , producto:Producto):string{
+
+    if(producto.categoria_id && producto.categoria?.nombre_categoria){
+
+      return producto.categoria.nombre_categoria;
+
+    }
+
+
+    if(producto.categoria_id && this.categorias && this.categorias.length >0){
+
+      const categoria = this.categorias.find((categoria) => categoria.id === producto.categoria_id);
+
+
+      if(categoria){
+
+
+        return categoria.nombre_categoria;
       }
-    });
+
+
+    }
+
+
+
+    
+
+
+    return 'Categoria no disponible'
+   
+
   }
 
-  filtrarPorCategoria(categoriaId: number | null): void {
-    this.categoriaSeleccionada = categoriaId;
-    this.aplicarFiltros();
-    console.log('Filtrando por categoría:', categoriaId);
+
+
+  rutaPassword():void{
+
+    this.router.navigate(['/recuperar-password'])
+
+  }
+
+  rutaCategoria():void{
+
+    this.router.navigate(['/registar-categoria'])
+
+
+  }
+
+  rutaProducto():void{
+
+    this.router.navigate(['/registrar-producto'])
+
   }
 
 
+  rutaPerfilUsuarioC():void{
 
-  rutaRegistrarCategoria(){
-    this.router.navigate(['/registar-categoria']);
+    this.router.navigate(['/cambiar-perfil'])
   }
 
+  
 
   
 
 
-  obtenerNombreUsuario(): void {
 
 
-    const userData = localStorage.getItem('user');
-
-    if(userData && userData !== 'undefined'){
 
 
-      const usuario = JSON.parse(userData);
 
 
-      if(usuario && usuario.user.nombre && usuario.user.perfil_usuario){
 
-        this.nombreUsuario = usuario.user.nombre;
 
-        this.perfilUsuario = usuario.user.perfil_usuario;
-      }
-
-    
-    }
-
-  }
-
+ 
 }
 

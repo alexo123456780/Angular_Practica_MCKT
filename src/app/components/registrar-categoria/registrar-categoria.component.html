@@ -1,136 +1,118 @@
-<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gradient-to-b from-blue-50 to-gray-50 py-8 px-4 sm:px-6 lg:px-8 animate__animated animate__fadeIn">
 
-    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden md:max-w-2xl transform hover:scale-[1.01] transition-all duration-300">
 
         <div class="p-8">
 
             <div class="flex items-center justify-between mb-6">
-
-                <h2 class="text-2xl font-bold text-gray-800  flex items-center gap-2">
-
-                    <svg xmlns = "http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewbox = "0 0 24 24" stroke = "currentColor">
-
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8114M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8V10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                     </svg>
-
-                    Registra tu Categoria Favorita
-
+                    Registra tu Categoría
                 </h2>
             </div>
 
-            <form [formGroup]="formularioCategoria" (ngSubmit)="registrarCategoria()" class="space-y-6">
+            <form [formGroup]="categoriaFormulario" (ngSubmit)="crearCategoria()" class="space-y-6">
 
+                <!-- Nombre de la categoría -->
                 <div class="space-y-2">
-
                     <label for="nombre_categoria" class="block text-sm font-medium text-gray-700">
-                        Nombre de la categoria
+                        Nombre de la categoría
                     </label>
 
                     <div class="relative">
-
                         <input type="text"
-                        id="nombre_categoria"
-                      formControlName="nombre_categoria"
-                      class="w-full  px-4 py-3  rounded-lg border-2 border-blue-500  focus: border-blue-500 focus:ring-blue-500 transition duration-200"
-
-                      [class.border-red-500] = "formularioCategoria.get('nombre_categoria')?.invalid && formularioCategoria.get('nombre_categoria')?.touched"
-
-                      placeholder="Ejemplo de categoria: Musica"
-                       
+                            id="nombre_categoria"
+                            formControlName="nombre_categoria"
+                            class="w-full px-4 py-3 rounded-lg border-2 border-blue-500 focus:border-blue-600 focus:ring-blue-500 transition duration-200"
+                            [class.border-red-500]="categoriaFormulario.get('nombre_categoria')?.invalid && categoriaFormulario.get('nombre_categoria')?.touched"
+                            placeholder="Ejemplo: Electrónicos, Ropa, Alimentos..."
                         >
                     </div>
 
-                    <!--Validaciones de validaciin-->
+                    <!-- Validaciones -->
+                    <div *ngIf="categoriaFormulario.get('nombre_categoria')?.touched" class="space-y-1">
+                        <div *ngIf="categoriaFormulario.get('nombre_categoria')?.errors?.['required']" class="text-sm text-red-500 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            El nombre de la categoría es requerido
+                        </div>
 
-                    <div *ngIf="formularioCategoria.get('nombre_categoria')?.touched"
-
-                    class="space-y-1"
-                    >
-
-                    <div *ngIf="formularioCategoria.get('nombre_categoria')?.errors?.['required']" class="text-sm text-red-500 flex items-center gap-1">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewbox="0 0 20 20 " fill="currentColor">
-
-                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-
-                        </svg>
-
-                        El nombre de la categoria es requerido
-
+                        <div *ngIf="categoriaFormulario.get('nombre_categoria')?.errors?.['minlength']" class="text-sm text-red-500 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                            Maximo 100 caracteres porfavor...
+                        </div>
                     </div>
-
-                <div *ngIf="formularioCategoria.get('nombre_categoria')?.errors?.['minlength']" class="text-sm text-red-500 flex items-center gap-1 ">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                      </svg>
-                      Mínimo 5 caracteres
-
                 </div>
 
+            
 
+                <!-- Campo para URL de imagen -->
+               
+                    <div class="relative">
+                        <input 
+                            type="url" 
+                            id="imagen_categoria" 
+                            formControlName="imagen_categoria"
+                            class="w-full px-4 py-3 rounded-lg border-2 border-blue-500 focus:border-blue-600 focus:ring-blue-500 transition duration-200"
+                            [class.border-red-500]="categoriaFormulario.get('imagen_categoria')?.invalid && categoriaFormulario.get('imagen_categoria')?.touched"
+                            placeholder="https://ejemplo.com/imagen.jpg"
+                        >
                     </div>
                     
-                </div>
+                    <!-- Validaciones para URL -->
+                    <div *ngIf=" categoriaFormulario.get('imagen_categoria')?.touched" class="space-y-1">
+                        <div *ngIf="categoriaFormulario.get('imagen_categoria')?.errors?.['required']" class="text-sm text-red-500 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            La URL de la imagen es requerida
+                        </div>
+                    </div>
+                    
+                  
 
-                <div *ngIf="errorMessage" class="p-4 bg-red-50 text-red-700 rounded-lg flex items-center gap-2">
+                <!-- Mensajes de error y éxito -->
+                <div *ngIf="mensajeError" class="p-4 bg-red-50 text-red-700 rounded-lg flex items-center gap-2 animate__animated animate__shakeX">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                     </svg>
-                    {{ errorMessage }}
-                  </div>
+                    {{ mensajeError }}
+                </div>
           
-                  <div *ngIf="mensajeExito" class="p-4 bg-green-50 text-green-700 rounded-lg flex items-center gap-2">
+                <div *ngIf="mensajeExito" class="p-4 bg-green-50 text-green-700 rounded-lg flex items-center gap-2 animate__animated animate__bounceIn">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>
                     {{ mensajeExito }}
-                  </div>
+                </div>
           
-                  <!-- Botones -->
-                  <div class="flex gap-3 pt-4">
+                <!-- Botones de acción -->
+                <div class="flex gap-3 pt-4">
                     <button 
-                      type="submit" 
-                      [disabled]="formularioCategoria.invalid || estaCargado"
-                      class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 transition flex-1 flex items-center justify-center gap-2">
-                      
-                      <svg *ngIf="estaCargado" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      
-                      <span *ngIf="!estaCargado">Guardar</span>
-                      <span *ngIf="estaCargado">Procesando...</span>
+                        type="submit" 
+                        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 transition flex-1 flex items-center justify-center gap-2 transform hover:scale-105">
+                        
+                       Subir
                     </button>
                     
                     <button 
-                      type="button" 
-                      (click)="navegarDashboard()"
-                      class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex-1">
-                      Cancelar
+                        type="button" 
+                        (click)="navegaralHome()"
+                        class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex-1 transform hover:scale-105">
+                        <span class="flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                            </svg>
+                            Cancelar
+                        </span>
                     </button>
-                  </div>
-
-
-
-
-
-
-
-
-
-
+                </div>
             </form>
-
-
-
-
-
         </div>
-
-
     </div>
-
-
-
 </div>

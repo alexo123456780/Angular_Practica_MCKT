@@ -1,6 +1,7 @@
-<div class="min-h-screen h-screen w-screen flex items-center justify-center bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-400 p-4 md:p-8">
-  <div class="w-full max-w-4xl h-auto flex bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden relative">
-    <div class="absolute inset-0 bg-white/95 backdrop-blur-sm z-0"></div>
+<div class="min-h-screen h-screen w-screen flex items-center justify-center p-0 m-0 overflow-hidden">
+    
+    <div class="w-full h-full flex bg-white/95 backdrop-blur-sm overflow-hidden relative">
+      <div class="absolute inset-0 bg-white/95 backdrop-blur-sm z-0"></div>
     
     <!-- Formulario de login -->
     <div class="w-1/2 p-8 md:p-16 flex items-center justify-center relative z-10">
@@ -15,12 +16,12 @@
           <p class="text-gray-600 animate-[fadeInUp_0.7s_ease-out]">Ingresa a tu cuenta para comenzar a comprar</p>
         </div>
 
-        <form [formGroup]="loginFormulario" (ngSubmit)="onSubmit()" class="space-y-6 animate-[fadeInUp_0.8s_ease-out]">
+        <form [formGroup]="formulario" (ngSubmit)="login()" class="space-y-6 animate-[fadeInUp_0.8s_ease-out]">
           <!-- Campo Email -->
           <div class="space-y-2">
             <div class="relative group">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-primary-500 transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-indigo-500 transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                 </svg>
               </div>
@@ -28,15 +29,30 @@
                 type="email"
                 id="email"
                 formControlName="email"
-                class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-primary-200 bg-white/80 hover:bg-white/90 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block transition-all duration-200 ease-in-out backdrop-blur-sm text-gray-800 placeholder-gray-500 hover:scale-[1.01] hover:shadow-lg"
-                [ngClass]="{'border-red-500 focus:ring-red-500 focus:border-red-500': loginFormulario.get('email')?.invalid && loginFormulario.get('email')?.touched,
-                          'border-gray-300': !(loginFormulario.get('email')?.invalid && loginFormulario.get('email')?.touched)}"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-indigo-200 bg-white/80 hover:bg-white/90 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block transition-all duration-300 ease-in-out backdrop-blur-sm text-gray-800 placeholder-gray-500 hover:scale-[1.02] hover:shadow-lg"
+                [ngClass]="{'border-red-500 focus:ring-red-500 focus:border-red-500': formulario.get('email')?.invalid && formulario.get('email')?.touched,
+                          'border-indigo-300 shadow-sm shadow-indigo-100': !(formulario.get('email')?.invalid && formulario.get('email')?.touched)}"
                 placeholder="Correo Electrónico"
               />
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" *ngIf="!formulario.get('email')?.invalid">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
             </div>
-            <div class="text-sm text-red-500 h-5 animate-[fadeInUp_0.3s_ease-out]" *ngIf="loginFormulario.get('email')?.invalid && loginFormulario.get('email')?.touched">
-              <span *ngIf="loginFormulario.get('email')?.errors?.['required']">El correo electrónico es requerido</span>
-              <span *ngIf="loginFormulario.get('email')?.errors?.['email']">Ingrese un correo electrónico válido</span>
+            <div class="text-sm text-red-500 h-5 animate-[fadeInUp_0.3s_ease-out]" *ngIf="formulario.get('email')?.invalid && formulario.get('email')?.touched">
+              <span *ngIf="formulario.get('email')?.errors?.['required']" class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+                El correo electrónico es requerido
+              </span>
+              <span *ngIf="formulario.get('email')?.errors?.['email']" class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+                Ingrese un correo electrónico válido
+              </span>
             </div>
           </div>
 
@@ -44,7 +60,7 @@
           <div class="space-y-2">
             <div class="relative group">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-primary-500 transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-indigo-500 transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
@@ -52,24 +68,45 @@
                 type="password"
                 id="password"
                 formControlName="password"
-                class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-primary-200 bg-white/80 hover:bg-white/90 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block transition-all duration-200 ease-in-out backdrop-blur-sm text-gray-800 placeholder-gray-500 hover:scale-[1.01] hover:shadow-lg"
-                [ngClass]="{'border-red-500 focus:ring-red-500 focus:border-red-500': loginFormulario.get('password')?.invalid && loginFormulario.get('password')?.touched,
-                          'border-gray-300': !(loginFormulario.get('password')?.invalid && loginFormulario.get('password')?.touched)}"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-indigo-200 bg-white/80 hover:bg-white/90 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block transition-all duration-300 ease-in-out backdrop-blur-sm text-gray-800 placeholder-gray-500 hover:scale-[1.02] hover:shadow-lg"
+                [ngClass]="{'border-red-500 focus:ring-red-500 focus:border-red-500': formulario.get('password')?.invalid && formulario.get('password')?.touched,
+                          'border-indigo-300 shadow-sm shadow-indigo-100': !(formulario.get('password')?.invalid && formulario.get('password')?.touched)}"
                 placeholder="Contraseña"
               />
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" *ngIf="!formulario.get('password')?.invalid">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
             </div>
-            <div class="text-sm text-red-500 h-5 animate-[fadeInUp_0.3s_ease-out]" *ngIf="loginFormulario.get('password')?.invalid && loginFormulario.get('password')?.touched">
-              <span *ngIf="loginFormulario.get('password')?.errors?.['required']">La contraseña es requerida</span>
-              <span *ngIf="loginFormulario.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
+            <div class="text-sm text-red-500 h-5 animate-[fadeInUp_0.3s_ease-out]" *ngIf="formulario.get('password')?.invalid && formulario.get('password')?.touched">
+              <span *ngIf="formulario.get('password')?.errors?.['required']" class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+                La contraseña es requerida
+              </span>
+              <span *ngIf="formulario.get('password')?.errors?.['minlength']" class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+                La contraseña debe tener al menos 6 caracteres
+              </span>
             </div>
           </div>
 
-          <!-- Mensaje de error -->
-          <div class="h-5">
-            <div class="text-sm text-red-500 animate-[fadeInUp_0.5s_ease-in-out]" *ngIf="errorMessage">
-              {{ errorMessage }}
+          <!-- Mensaje de error y éxito -->
+          <div class="h-12">
+            <div class="text-sm text-red-500 bg-red-50 p-2 rounded-lg border border-red-200 animate-[fadeInUp_0.5s_ease-in-out] flex items-center gap-2" *ngIf="errorMensaje">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+              {{ errorMensaje }}
             </div>
-            <div class="text-sm text-green-500 animate-[fadeInUp_0.5s_ease-in-out]" *ngIf="mensajeExito">
+            <div class="text-sm text-green-600 bg-green-50 p-2 rounded-lg border border-green-200 animate-[fadeInUp_0.5s_ease-in-out] flex items-center gap-2" *ngIf="mensajeExito">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
               {{ mensajeExito }}
             </div>
           </div>
@@ -77,10 +114,11 @@
           <!-- Botón de inicio de sesión -->
           <button
             type="submit"
-            [disabled]="loginFormulario.invalid || estaCargando"
-            class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-indigo-500/50 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transform transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] flex items-center justify-center gap-2"
+            [disabled]="formulario.invalid || estaCargando"
+            class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-indigo-500/50 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transform transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.03] flex items-center justify-center gap-2 overflow-hidden relative"
           >
-            <svg *ngIf="!estaCargando" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <span class="absolute inset-0 bg-gradient-to-r from-indigo-600/0 via-indigo-600/30 to-indigo-600/0 animate-[gradientAnimation_3s_ease_infinite] opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+            <svg *ngIf="!estaCargando" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
             </svg>
             <div *ngIf="estaCargando" class="relative h-5 w-5">
@@ -90,16 +128,45 @@
                 <div class="h-1 w-1 bg-white rounded-full animate-[pulse_1s_ease-in-out_infinite]"></div>
               </div>
             </div>
-            Iniciar Sesión
+            <span class="relative z-10">Iniciar Sesión</span>
           </button>
           
           <!-- Enlaces adicionales -->
-          <div class="mt-4 animate-[fadeInUp_1s_ease-out]">
-            <p class="text-gray-600">¿No tienes una cuenta? <a routerLink="/cliente-registro" class="text-indigo-600 hover:text-indigo-700 font-medium transition-colors duration-200">Regístrate aquí</a></p>
-          </div>
+          <div class="mt-6 animate-[fadeInUp_1s_ease-out] space-y-4">
+            <div class="relative">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300"></div>
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white text-gray-500">O</span>
+              </div>
+            </div>
+            
+            <p class="text-gray-600 flex items-center justify-center gap-2 group transition-all duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+              </svg>
+              ¿No tienes una cuenta? 
+              <a routerLink="/cliente-registro" class="text-indigo-600 hover:text-indigo-700 font-medium transition-all duration-300 hover:underline hover:scale-105 inline-flex items-center">
+                Regístrate aquí
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </a>
+            </p>
 
-          <div class="mt-4 animate-[fadeInUp_1s_ease-out]">
-            <p class="text-gray-600">¿Eres vendedor? <a routerLink="/login" class="text-indigo-600 hover:text-indigo-700 font-medium transition-colors duration-200">Inicia sesión como vendedor</a></p>
+            <p class="text-gray-600 flex items-center justify-center gap-2 group transition-all duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" />
+              </svg>
+              ¿Eres vendedor? 
+              <a routerLink="/login" class="text-indigo-600 hover:text-indigo-700 font-medium transition-all duration-300 hover:underline hover:scale-105 inline-flex items-center">
+                Inicia sesión como vendedor
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </a>
+            </p>
           </div>
         </form>
       </div>

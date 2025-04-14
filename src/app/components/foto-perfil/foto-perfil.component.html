@@ -1,0 +1,132 @@
+<div class="perfil-container">
+
+    <div class="animated-background"></div>
+  <div class="animated-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <!-- Contenedor del formulario centrado -->
+  <div class="form-container">
+
+    <div class="form-header">
+
+        <div class="header-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+        </div>
+        <h1 class="title">Cambia tu foto de perfil</h1>
+        <p class="subtitle"><i class="bi bi-file-earmark-richtext-fill"></i> Edita tu perfil</p>
+
+    </div>
+
+    <form [formGroup]="formularioFotoPerfil" (ngSubmit)="cambiarFotoPerfil()"  class="producto-form">
+
+        <div class="form-group">
+            <label for="perfil_usuario"><i class="bi bi-file-earmark-richtext">Perfil de Usuario</i></label>
+
+            <div class="input-with-icon">
+                <i class="bi bi-box-seam input-icon"></i>
+                <input type="text"
+                id="perfil_usuario"
+                formControlName="perfil_usuario"
+                placeholder="Ejemplo: https://perfilexamploe/jpg"
+                class="form-control"
+                [ngClass]="{'invalid':formularioFotoPerfil.get('perfil_usuario')?.invalid && formularioFotoPerfil.get('perfil_usuario')?.touched}"
+                >
+            </div>
+
+            <div class="error-message"
+            *ngIf="formularioFotoPerfil.get('perfil_usuario')?.invalid && formularioFotoPerfil.get('perfil_usuario')?.touched"
+            >
+
+            <span *ngIf="formularioFotoPerfil.get('perfil_usuario')?.errors?.['required']">
+                La url de la foto de perfil es obligatorio
+            </span>
+
+
+            </div>
+
+            <div class="message-container">
+                <div class="error-alert" *ngIf="mensajeError">
+                  <i class="bi bi-exclamation-triangle-fill"></i> {{ mensajeError }}
+                </div>
+                <div class="success-alert" *ngIf="mensajeExito">
+                  <i class="bi bi-check-circle-fill"></i> {{ mensajeExito }}
+                </div>
+              </div>
+
+
+              <div class="button-container">
+                <button
+                type="submit"
+                class="submit-button"
+                [disabled]="formularioFotoPerfil.invalid||estaCargando"
+                
+                >
+
+                <span  *ngIf="!estaCargando"><i class="bi bi-upload"></i>Sube tu nueva foto de perfil</span>
+
+                <div class="loader" *ngIf="estaCargando"></div>
+
+
+                </button>
+
+                <button type="button" class="cancel-button" (click)="rutaDashboard()">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                  </button>
+
+
+
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+    </form>
+
+
+
+
+
+
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>

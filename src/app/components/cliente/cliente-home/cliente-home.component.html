@@ -1,1 +1,186 @@
-<h1>Aca se hara la pantalla especifica para el cliente y sus compras</h1>
+<!-- Contenedor principal con animación de entrada -->
+<div class="cliente-marketplace">
+  <!-- Sección de cabecera con información del cliente -->
+  <header class="cliente-header">
+    <div class="header-background"></div>
+    <div class="header-content animate__animated animate__fadeIn">
+      <!-- Perfil del cliente -->
+      <div class="cliente-profile">
+        <div class="profile-image">
+          <!-- Mostrar imagen de perfil si existe, o iniciales si no -->
+          <img *ngIf="perfil_cliente" [src]="perfil_cliente" alt="Perfil de cliente" class="profile-img">
+          <div *ngIf="!perfil_cliente" class="profile-placeholder">
+            {{nombre_cliente ? nombre_cliente.charAt(0).toUpperCase() : 'C'}}
+          </div>
+        </div>
+        <div class="profile-info">
+          <h1 class="welcome-message">¡Hola, <span class="cliente-name">{{nombre_cliente || 'Cliente'}}</span>!</h1>
+          <p class="welcome-subtitle">Bienvenido a tu experiencia de compra personalizada</p>
+        </div>
+      </div>
+
+      <!-- Botón de cerrar sesión -->
+      <button class="logout-btn" (click)="cerrarSesion()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logout-icon">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sección principal de contenido -->
+  <main class="main-content">
+    <!-- Barra de búsqueda y filtros -->
+    <section class="search-filters-section animate__animated animate__fadeInUp animate__delay-1s">
+      <div class="search-container">
+        <div class="search-box">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            placeholder="Buscar productos..." 
+            [(ngModel)]="busquedaporTermino" 
+            (input)="buscarProductos($event)" 
+            class="search-input">
+        </div>
+
+        <div class="sort-container">
+          <select [(ngModel)]="ordenamiento" (change)="ordenarProductos($event)" class="sort-select">
+            <option value="">Ordenar por</option>
+            <option value="precio-asc">Precio: Menor a Mayor</option>
+            <option value="precio-desc">Precio: Mayor a Menor</option>
+            <option value="recientes">Más Recientes</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categorías con efecto de desplazamiento horizontal -->
+    <section class="categories-section animate__animated animate__fadeInUp animate__delay-2s">
+      <h2 class="section-title">Categorías</h2>
+      <div class="categories-slider">
+        <!-- Categoría "Todos" -->
+        <div 
+          class="category-card" 
+          [class.active]="categoriaSeleccionada === null" 
+          (click)="filtrarporCategoria(null)">
+          <div class="category-icon-container all-categories">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </div>
+          <span class="category-name">Todos</span>
+        </div>
+
+        <!-- Lista de categorías dinámicas -->
+        <div 
+          *ngFor="let categoria of categorias" 
+          class="category-card" 
+          [class.active]="categoriaSeleccionada === categoria.id" 
+          (click)="filtrarporCategoria(categoria.id)">
+          <div class="category-image-container">
+            <img [src]="categoria.imagen_categoria" [alt]="categoria.nombre_categoria" class="category-image">
+          </div>
+          <span class="category-name">{{categoria.nombre_categoria}}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Productos con animación de entrada escalonada -->
+    <section class="products-section">
+      <h2 class="section-title">Productos Disponibles</h2>
+      
+      <!-- Grid de productos -->
+      <div class="products-grid">
+        <!-- Mensaje cuando no hay productos -->
+        <div *ngIf="productosFiltrados.length === 0" class="no-products animate__animated animate__fadeIn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="empty-icon">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          <h3>No se encontraron productos</h3>
+          <p>Intenta con otra búsqueda o selecciona otra categoría</p>
+        </div>
+
+        <!-- Tarjetas de productos -->
+        <div 
+          *ngFor="let producto of productosFiltrados; let i = index" 
+          class="product-card animate__animated animate__fadeInUp"
+          [style.animation-delay]="(i * 0.1) + 's'">
+          
+          <!-- Imagen del producto con efecto de hover -->
+          <div class="product-image-container">
+            <img [src]="producto.imagen_producto" [alt]="producto.nombre_producto" class="product-image">
+            
+            <!-- Etiquetas especiales -->
+            <div class="product-badges">
+              <span *ngIf="i % 3 === 0" class="badge new-badge">Nuevo</span>
+              <span *ngIf="i % 4 === 0" class="badge offer-badge">Oferta</span>
+            </div>
+            
+            <!-- Acciones rápidas -->
+            <div class="quick-actions">
+              <button class="action-btn view-details" (click)="verDetalles(producto)">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="16"></line>
+                  <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+              </button>
+              <button class="action-btn add-favorite">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Información del producto -->
+          <div class="product-info">
+            <!-- Categoría y precio -->
+            <div class="product-meta">
+              <span class="product-category">{{obtenerNombreCategoria(i, producto)}}</span>
+              <span class="product-price">${{producto.precio_producto | number:'1.2-2'}}</span>
+            </div>
+            
+            <!-- Nombre del producto -->
+            <h3 class="product-name">{{producto.nombre_producto}}</h3>
+            
+            <!-- Descripción con límite de caracteres -->
+            <p class="product-description">{{producto.descripcion.length > 100 ? producto.descripcion.substring(0, 100) + '...' : producto.descripcion}}</p>
+            
+            <!-- Botón de acción principal -->
+            <button class="add-to-cart-btn" (click)="verDetalles(producto)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cart-icon">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pie de página -->
+  <footer class="cliente-footer">
+    <div class="footer-content">
+      <p class="copyright">© 2025 MMTK-MARQUET. Todos los derechos reservados a Alejandro M.L.</p>
+      <div class="footer-links">
+        <a href="#" class="footer-link">Términos y Condiciones</a>
+        <a href="#" class="footer-link">Política de Privacidad</a>
+        <a href="#" class="footer-link">Contacto</a>
+      </div>
+    </div>
+  </footer>
+</div>

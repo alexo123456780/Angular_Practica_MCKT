@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule,FormGroup,FormBuilder,Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, RequiredValidator, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CategoriaServiceService } from '../../services/categoria-service.service';
 import { Categoria } from '../../interfaces/categoria.interface';
@@ -9,91 +9,94 @@ import { Categoria } from '../../interfaces/categoria.interface';
 @Component({
   selector: 'app-registrar-categoria',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule,RouterModule],
+  imports: [ReactiveFormsModule,RouterModule,CommonModule],
   templateUrl: './registrar-categoria.component.html',
   styleUrls: ['./registrar-categoria.component.scss']
 })
+
+
 export class RegistrarCategoriaComponent {
 
-
-
-  estaCargado = false;
-  formularioCategoria: FormGroup;
-  errorMessage: string = '';
   mensajeExito: string = '';
-
-  constructor(private fb:FormBuilder , private categoriaService:CategoriaServiceService, private router:Router){
-    this.formularioCategoria = this.fb.group({
-
-      nombre_categoria: ['',[Validators.required,Validators.minLength(5)]],
-      imagen_categoria: ['',[Validators.required]]
+  mensajeError: string = '';
+  categoriaFormulario: FormGroup;
 
 
+  constructor(private categoriaService:CategoriaServiceService, private router:Router, private fb:FormBuilder){
+
+    this.categoriaFormulario = this.fb.group({
+
+      nombre_categoria: ['',[Validators.required,Validators.maxLength(100)]],
+      imagen_categoria: ['',Validators.required]
     })
 
   }
 
 
 
+  crearCategoria(){
 
-  registrarCategoria(){
+    const categoria: Categoria = {
+      ...this.categoriaFormulario.value
+    }
 
-    if(this.formularioCategoria.valid){
+    if(this.categoriaFormulario.valid){
 
-      this.estaCargado = true;
-      this.errorMessage = '';
+      this.mensajeError = '';
+      this.mensajeExito = '';
 
-      const categoriaNueva: Categoria = {
+      this.categoriaService.crearCategoria(categoria).subscribe({
 
-        id :0,
-        imagen_categoria:this.formularioCategoria.value.imagen_categoria,
-        nombre_categoria: this.formularioCategoria.value.nombre_categoria
-        
+        next: (response) =>{
 
-      }
+          this.mensajeExito = 'Tu categoria ha sido creado exitosamente';
 
-      this.categoriaService.crearCategoria(categoriaNueva).subscribe({
-
-        next:(response =>{
-
-          this.estaCargado = false;
-          this.mensajeExito = 'Se creo exitosamente la categoria';
-
-          console.log(`Se creo exitosamente la categoria: ${response}`);
+          console.log('Categoria creada exitosamente',JSON.stringify(response.data,null,2));
 
           setTimeout(() =>{
 
             this.router.navigate(['/dashboard']);
 
-          },1500)
+          },2000)
 
+        },
 
-        }),
+        error: (error) =>{
 
-        error:(error =>{
+          this.mensajeError = 'Error al crear la categoria';
 
-          this.estaCargado = false;
-          this.errorMessage = 'Ocurrio un eororor'
+          console.log('respuesta del backend:',JSON.stringify(error,null,2));
 
-          console.log(`Error al crear la categoria: ${error}`);
-
-
-
-        })
-      
+        }
       })
+
+    }else{
+
+      this.mensajeError = 'Por favor, completa todos los campos del formulario';
+
 
     }
 
   }
 
-
-  navegarDashboard(){
+  navegaralHome():void{
 
     this.router.navigate(['/dashboard']);
-    
+
+
   }
 
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 

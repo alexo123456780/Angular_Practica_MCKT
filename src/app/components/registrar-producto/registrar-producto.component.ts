@@ -1,131 +1,147 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { AutServiceService } from '../../services/aut-service.service';
-import { Router, RouterLink } from '@angular/router';
-import { Producto, ProductosResponse } from '../../interfaces/producto.interface';
+import { Component, type OnInit } from '@angular/core';
+import { ReactiveFormsModule,FormBuilder,FormGroup,Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Categoria } from '../../interfaces/categoria.interface';
-import { CategoriaServiceService } from '../../services/categoria-service.service';
+import { Router } from '@angular/router';
 import { ProductosServiceService } from '../../services/productos-service.service';
-
+import { Producto } from '../../interfaces/producto.interface';
+import { AutServiceService } from '../../services/aut-service.service';
+import { CategoriaServiceService } from '../../services/categoria-service.service';
+import { Categoria } from '../../interfaces/categoria.interface';
 
 
 @Component({
   selector: 'app-registrar-producto',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule,RouterModule,CommonModule],
   templateUrl: './registrar-producto.component.html',
   styleUrls: ['./registrar-producto.component.scss']
 })
+
 export class RegistrarProductoComponent implements OnInit {
-  productoForm: FormGroup;
-  errorMessage: string = '';
-  successMessage: string = '';
-  categorias: Categoria[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private productoService: ProductosServiceService,
-    private authService: AutServiceService,
-    private router: Router,
-    private categoriaService: CategoriaServiceService
-  ) {
-    this.productoForm = this.fb.group({
-      nombre_producto: ['', [Validators.required, Validators.minLength(3)]],
-      precio_producto: ['', [Validators.required, Validators.min(0)]],
-      descripcion: ['', [Validators.required, Validators.minLength(10)]],
-      imagen_producto: ['', [Validators.required]],
-      categoria_id: ['', [Validators.required]]
-    });
-  }
+  errorMensaje: string  = '';
+  mensajeExito: string = '';
+  estaCargando: boolean = false;
+  productoFormulario: FormGroup;
+  usuario_Id : number | null = 1;
+  categorias: Categoria[] = []
+
+
+  constructor(private productoService:ProductosServiceService, private router: Router, private fb:FormBuilder,private authService:AutServiceService,private categoriaService:CategoriaServiceService){
+
+    this.productoFormulario = this.fb.group({
+
+      nombre_producto: ['',[Validators.required,Validators.minLength(4)]],
+      precio_producto: ['',[Validators.required]],
+      descripcion: ['',[Validators.required,Validators.minLength(4)]],
+      imagen_producto: ['',Validators.required],
+      cantidad_productos: ['',[Validators.required,Validators.pattern(/^[0-9]+$/)]],
+      categoria_id: ['',Validators.required]
+
+    })
   
+  }
+
+
+  //hago la llamada alas funciones en ngonitin para usar las funcioes y ejecutar su valor nuevo
+
   ngOnInit(): void {
-    this.cargarCategorias();
+
+    this.obtenerCategorias();
+    this.obtenerIdUsuario();
+    
   }
-  
-  cargarCategorias(): void {
+
+  obtenerIdUsuario():void{
+
+    this.usuario_Id = this.authService.obtenerIdUsuario();
+    console.log('Id obtenido correctamente',this.usuario_Id);
+
+  }
+
+
+  obtenerCategorias():void{
+
     this.categoriaService.obtenerCategorias().subscribe({
-      next: (categorias: Categoria[]) => {
-        this.categorias = categorias;
+
+      next: (response) =>{
+
+        console.log('Categorias obtenidas correctamente',JSON.stringify(response.data,null,2));
+        this.categorias = response.data;
+
       },
-      error: (error: any) => {
-        console.error('Error al cargar categorías:', error);
-        this.errorMessage = 'Error al cargar las categorías';
+      error: (error) =>{
+        console.log('Error al obtener las categorias',JSON.stringify(error,null,2));
       }
-    });
+
+    })
   }
 
-  agregarProducto(): void {
-    if (this.productoForm.valid) {
-      const token = localStorage.getItem('token');
-      if (!token || token === 'undefined') {
-        this.errorMessage = 'Debe iniciar sesión para crear un producto';
-        console.error('Error: No hay token de autenticación');
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
-        return;
-      }
-      
-      const usuarioId = this.authService.getUserId();
-      
-      if (usuarioId === null) {
-        try {
-          const userStr = localStorage.getItem('user');
-          if (userStr && userStr !== 'undefined') {
-            localStorage.setItem('user', userStr);
-            console.log('Intentando recuperar la sesión del usuario');
-            const retryUsuarioId = this.authService.getUserId();
-            if (retryUsuarioId === null) {
-              throw new Error('No se pudo recuperar el ID del usuario');
-            }
-          } else {
-            throw new Error('No hay información del usuario en localStorage');
-          }
-        } catch (error) {
-          console.error('Error al recuperar la sesión:', error);
-          this.errorMessage = 'Debe iniciar sesión para crear un producto';
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 1500);
-          return;
-        }
-      }
-      
-      const producto: Producto = {
-        ...this.productoForm.value,
-        id: 0,
-        usuario_id: usuarioId || 0, // Usar 0 como fallback si aún es null
-        categoria_id: parseInt(this.productoForm.value.categoria_id)
-      };
-      
-      // Verificación adicional antes de enviar
-      if (!producto.usuario_id) {
-        console.warn('Advertencia: Se está enviando un producto con usuario_id = 0');
-      }
 
-      this.productoService.agregaProductos(producto).subscribe({
-        next: (response) => {
-          this.successMessage = 'Producto creado exitosamente';
-          console.log('Producto creado:', response);
-          setTimeout(() => {
+
+  venderProducto(){
+
+    const producto : Producto ={...this.productoFormulario.value, usuario_id: this.usuario_Id};
+
+
+    if(this.productoFormulario.valid){
+
+      this.estaCargando = true;
+      this.errorMensaje = '';
+      this.mensajeExito = '';
+
+      this.productoService.publicarProducto(producto).subscribe({
+
+        next: (response) =>{
+
+          this.estaCargando = false;
+          this.mensajeExito = 'Producto creado exitosamente';
+
+          console.log('Producto creado  dato nuevo: ',JSON.stringify(response.data,null,2));
+
+          setTimeout(() =>{
+
             this.router.navigate(['/dashboard']);
-          }, 1500);
+          },2000)
         },
-        error: (error) => {
-          this.errorMessage = 'Error al crear el producto: ' + 
-            (error.error?.message || 'Por favor, intente nuevamente');
-          console.error('Error al crear producto:', error);
+
+        error: (error) =>{
+
+          this.estaCargando = false;
+          this.errorMensaje = 'Error al crear el producto';
+
+          console.log('Respuesta del backend: ',JSON.stringify(error,null,2));
+
         }
-      });
-    } else {
-      this.errorMessage = 'Por favor, complete todos los campos correctamente';
-      Object.keys(this.productoForm.controls).forEach(key => {
-        const control = this.productoForm.get(key);
-        if (control?.invalid) {
-          control.markAsTouched();
-        }
-      });
+
+
+      })
+    }else{
+
+      this.errorMensaje = 'Por favor, completa todos los campos correctamente';
+
     }
+
   }
+
+  rutaDashboard():void{
+
+    this.router.navigate(['/dashboard']);
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 }

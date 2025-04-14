@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder,Validators,FormGroup,ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ReactiveFormsModule,FormBuilder,FormGroup,Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ClienteServiceService } from '../../../services/cliente-service.service';
+import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
-
+import { Cliente } from '../../../interfaces/cliente.interface';
+import { ClienteServiceService } from '../../../services/cliente-service.service';
 
 @Component({
   selector: 'app-cliente-login',
@@ -13,144 +13,106 @@ import { RouterModule } from '@angular/router';
   templateUrl: './cliente-login.component.html',
   styleUrls: ['./cliente-login.component.scss']
 })
-export class ClienteLoginComponent {
 
+export class ClienteLoginComponent { 
+  
+  formulario: FormGroup;
+  errorMensaje: string = '';
+  mensajeExito: string = '';
+  estaCargando: boolean = false;
 
-  loginFormulario : FormGroup;
-  errorMessage: string = '';
-  estaCargando : boolean = false;
-  mensajeExito: string = "";
+  constructor(private clienteService:ClienteServiceService, private fb:FormBuilder, private router:Router){
 
+    this.formulario = this.fb.group({
 
-  constructor(private fb:FormBuilder , private clienteService: ClienteServiceService, private router:Router){
+      email: ['',[Validators.required, Validators.email]],
+      password: ['',[Validators.required, Validators.minLength(6)]]
 
-    this.loginFormulario = this.fb.group({
-
-      email: ['',[Validators.required,Validators.email]],
-      password:['',[Validators.required,Validators.minLength(6)]]
     })
-
   }
 
+  login(){
 
-  onSubmit(){
-
-
-    if(this.loginFormulario.valid){
-
-      this.estaCargando = true;
-
-      this.errorMessage = "";
+    //defino los datos del cliente basado en algunos tipos definidos de mi interfaz(email,password)
+    const cliente: Cliente = {
+      ...this.formulario.value
+    }
 
 
-      const {email,password} = this.loginFormulario.value;
+    if(this.formulario.valid){
 
+      this.estaCargando = true
 
-      this.clienteService.login(email,password).subscribe({
+      this.clienteService.loginCliente(cliente).subscribe({
 
         next: (response) =>{
 
-          this.estaCargando = false;
+          this.estaCargando = false
+          this.errorMensaje = '';
 
 
-          console.log(`Respuessta del servidor: ${response}`);
+          if(response){
 
+            console.log('Login exitoso:',response.message);
 
-          if(response && response.status){
-
-            console.log("Inicio de sesion correcto");
-
-
-            const token = response.token || (response.data && response.data.token);
-
-            console.log("Guardando el token en el localStorage");
-
+            const token = response.token;
 
             if(token){
 
               localStorage.setItem('token',token);
+              console.log('Token guardado correctamente');
 
 
             }else{
 
-              console.log('No se hayo token para el cliente');
-
+              console.log('No se encontro un token disponible..');
             }
 
 
-            if(response.data ){
+            if(response.data){
 
+              console.log('Guardando datos del usuario...');
 
-              localStorage.setItem('user',JSON.stringify(response.data));
+              localStorage.setItem('data',JSON.stringify(response.data))
 
-              console.log(`Guardando el cliente : ${response.data}`);
+              console.log('Datos del cliente guardado correctamente',JSON.stringify(response.data,null,2))
 
             }else{
 
+              console.log('No se encontro un cliente');
 
-                localStorage.setItem('user', JSON.stringify(response));
+            }
 
-                console.log(`Guardando el cliente: ${response}`);
+            if(!response){
 
-
-                if(!response){
-
-                  console.log("No se encontro el cliente");
-                  this.errorMessage = "No se encontro el cliente";
-                }
-
+              console.log('No se encontro informacion del cliente');
 
             }
 
 
-            console.log('Redirigiendo al menu de los clientes');
+            console.log('Navegando al portal de clientes....');
 
-
-
-            setTimeout(() =>{
-
-              console.log('Redirigiendo al menu de los clientes');
+            /*setTimeout(() =>{
 
               this.router.navigate(['/cliente-home']);
-
-            },1500);
-
+              this.mensajeExito = 'Login exitoso'
+            },1500)*/
           }else{
 
-            console.log(`Inicio malo ${response.status}`);
-
-            this.errorMessage = response.message || 'Que paso crack ocurrio un error de login'
-
-          
+            console.log('Error al iniciar sesion',response);
+            this.errorMensaje = 'Error de inicio de sesion'
           }
 
-
-      
         },
 
         error: (error) =>{
 
           this.estaCargando = false;
-
-          console.error('Error en el inicio de sesion',error);
-
-          this.errorMessage = 'Ocurrio un error en el inicio de sesion';
+          console.log('Credenciales Invalidas', JSON.stringify(error,null,2));
+          this.errorMensaje = 'Credenciales Invalidas intente de nuevo porfavor...'
 
         }
-
-
       })
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -158,17 +120,10 @@ export class ClienteLoginComponent {
 
     }else{
 
-      console.log("Formulario invalido");
-
-      this.errorMessage = "Formulario invalido";
-
-
+      console.log('No deje espacios sin llenar del formulario',this.formulario.errors);
+      this.errorMensaje = 'Rellene todos los campos del formulario';
 
     }
-
-
-
-
   }
 
 

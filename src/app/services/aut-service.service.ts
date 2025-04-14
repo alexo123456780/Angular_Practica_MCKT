@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { Usuario,UsuarioResponse } from '../interfaces/usuario.interface';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs';
+import { UsuarioResponse } from '../interfaces/usuario.interface';
 import { environment } from '../../environments/environment';
+import { Usuario } from '../interfaces/usuario.interface';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,100 +15,115 @@ import { environment } from '../../environments/environment';
 
 export class AutServiceService {
 
-  private apiGlobal = environment.apiUrl;
+  private apiBase = environment.apiGlobal;
+
+  constructor(private http:HttpClient){}
 
 
-  constructor(private http : HttpClient) { }
+  //nota: JsonStringify sirve como un json en php osea convierto algo a un formato json
+  //nota el uso de null en JsonStringify signifa que el valor no se modifica y el 2 es el formato de espacio que tendra ese json
 
+  login(usuario:Usuario):Observable<UsuarioResponse>{
 
-
-  login(email: string, password: string): Observable<UsuarioResponse> {
-    return this.http.post<UsuarioResponse>(`${this.apiGlobal}/login`, { email, password }).pipe(
-
-      map(response => {
-
-        console.log(`Exito en la peticion de login: ${response.message}`);
-        return response
-
-
-      })
-
-
-    )
-  }
-
-  registro(nombre:string ,email:string , password:string , perfil_usuario:string): Observable<UsuarioResponse> {
-    return this.http.post<UsuarioResponse>(`${this.apiGlobal}/register`, {nombre,email,password,perfil_usuario}).pipe(
+    return this.http.post<UsuarioResponse>(`${this.apiBase}/login`,usuario).pipe(
 
       map(response =>{
 
-        console.log(`Exito en la peticion de registro: ${response.message}`);
-        return response
+        console.log('Logeado exitosamente respuesta:',JSON.stringify({
+
+          status: response.status,
+          message: response.message,
+          code: response.code,
+          data: response.data,
+          
+
+        },null,2));
+
+        return response;
+
+      },2)
+    )
+
+  }
+
+
+  //funcion registrar usuario
+
+
+  registarUsuario(usuario:Usuario):Observable<UsuarioResponse>{
+
+    return this.http.post<UsuarioResponse>(`${this.apiBase}/register`,usuario).pipe(
+
+      map(response =>{
+
+        console.log('Usuario registrado correctamente respuesta: ',JSON.stringify({
+
+          status: response.status,
+          message: response.message,
+          code: response.code,
+          data: response.data
+        },null,2))
+
+        return response;
+
       })
 
-
-
     )
+
   }
 
 
-  getUserId(): number| null{
-    try {
-      const user = localStorage.getItem('user');
-      
-      if(!user || user === 'undefined') {
-        console.log('No hay usuario almacenado en localStorage debes de iniciar sesion antes de crear productos');
-        return null;
-      }
-      
-      const userData = JSON.parse(user);
 
+  obtenerIdUsuario():number | null{
+    try{
 
-      if (!userData) {
-        console.log('No se pudo parsear el objeto de usuario');
-        return null;
-      }
-      
-      if (userData.id !== undefined && userData.id !== null && !isNaN(Number(userData.id))) {
-        return Number(userData.id);
-      }
-      
-      if (userData.data && userData.data.id !== undefined && userData.data.id !== null) {
-        return Number(userData.data.id);
-      }
-      
-      const token = localStorage.getItem('token');
-      if (token && token !== 'undefined') {
-        console.log('Hay un token válido, pero no se encontró ID de usuario. Intente iniciar sesión nuevamente.');
-      }
-      
-      console.log('El objeto de usuario no contiene un ID válido:', userData);
+    const usuario = localStorage.getItem('data');
+
+    if(!usuario){
+
+      console.log('No se encontro el usuario en el localstorage,Inicia sesion porfavor...');
       return null;
-    } catch(e) {
-      console.error(`Error al obtener el ID del usuario: ${e}`);
-      this.recuperarSesion();
-      return null;
+
     }
+
+    const usuarioData = JSON.parse(usuario);
+
+    if(usuarioData.id !== null && usuarioData.id !== undefined && typeof usuarioData.id === 'number'){
+
+      console.log('El id del usuario es: ', usuarioData.id);
+
+      return Number(usuarioData.id)
+
+    }
+
+
+    return null;
+    
+    }catch(error){
+
+      console.error('Error al obtener el id del usuario: ',error);
+
+      return null;
+
+
+    }  
   }
+
+
+
+
+
+
   
-  private recuperarSesion(): void {
-    const token = localStorage.getItem('token');
-    if (token && token !== 'undefined') {
-      console.log('Hay un token válido, pero la información del usuario es incorrecta');
-      
-      const userStr = localStorage.getItem('user');
-      if (userStr && userStr !== 'undefined') {
-        try {
-          const userData = JSON.parse(userStr);
-          
-          if (userData.data && typeof userData.data === 'object') {
-            localStorage.setItem('user', JSON.stringify(userData.data));
-            console.log('Información de usuario reparada y guardada correctamente');
-          }
-        } catch (e) {
-          console.error('Error al intentar reparar la información del usuario:', e);
-        }
-      }
-    }
-  }
+
+
+
+
+  
+
+
+
+
+
+
 }

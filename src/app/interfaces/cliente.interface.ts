@@ -6,20 +6,19 @@ export interface Cliente{
     telefono:string,
     direccion:string,
     password:string,
-    perfil_cliente:string
-    token:string
+    perfil_cliente:string,
+    created_at: Date,
+    updated_at: Date,
 
 }
 
 
-
-
 export interface ClienteResponse{
 
-    status: boolean;
-    message: string;
-    data: Cliente,
+    status:boolean,
+    message:string,
+    data:Cliente | Cliente[],
+    token:string,
     code:number
-    token:string
 
 }

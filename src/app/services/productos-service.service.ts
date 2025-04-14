@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Producto } from '../interfaces/producto.interface';
-import { ProductosResponse } from '../interfaces/producto.interface';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import{ map } from 'rxjs/operators';
+import { map } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { ProductoResponse } from '../interfaces/producto.interface';
+import { Producto } from '../interfaces/producto.interface';
+import { ProductoListaResponse } from '../interfaces/producto.interface';
 
 
 @Injectable({
@@ -12,55 +13,83 @@ import { environment } from '../../environments/environment';
 })
 export class ProductosServiceService {
 
+  private apiBase = environment.apiGlobal;
 
-  private apiGlobal = environment.apiUrl;
-  
-  constructor(private http: HttpClient) { }
+  constructor(private http:HttpClient){}
 
 
-  obtenerProductos(): Observable<Producto[]>{
+  obtenerProductos():Observable<ProductoListaResponse>{
 
-    return this.http.get<ProductosResponse>(`${this.apiGlobal}/productos`).pipe(
+    return this.http.get<ProductoListaResponse>(`${this.apiBase}/productos`).pipe(
 
-      map((response=>{
+      map(response =>{
 
-        console.log(`Exito en la peticion de los productos : ${response.message}`);
-        return response.data || [];
+        console.log('Se obtuvieron correctamente los productos respuesta: ',JSON.stringify({
 
-      }))
+          status: response.status,
+          message: response.message,
+          data: response.data,
+          code: response.code
+
+        },null,2))
+
+        return response;
+      })
 
     )
-
   }
 
 
-  agregaProductos(producto:Producto): Observable<Producto[]>{
+  //nota uso la interfaz de producto recuerda que solo es una plantilla de valores luego tendre que asiganarle un valor propio en una variable del componente que llege a usar
 
-    return this.http.post<ProductosResponse>(`${this.apiGlobal}/crearProducto`,producto).pipe(
 
-      map((response)=>{
+  publicarProducto(producto:Producto):Observable<ProductoResponse>{
 
-        console.log(`Exito en la peticion de agregar un producto: ${response.message}`);
-        return response.data || [];
+    return this.http.post<ProductoResponse>(`${this.apiBase}/crearProducto`,producto).pipe(
+
+      map(response =>{
+
+        console.log('Se creo el producto correctamente, respuesta: ',JSON.stringify({
+
+          status: response.status,
+          message: response.message,
+          data:response.data,
+          code:response.code
+
+        }))
+
+        return response;
+
+
+
+      })
+    )    
+  }
+
+
+  obtenerProductoId(id:number):Observable<ProductoResponse>{
+
+    return this.http.get<ProductoResponse>(`${this.apiBase}/productos/${id}`).pipe(
+
+      map(response =>{
+
+        console.log('Se obtuvo el producto correctamente, respuesta: ',JSON.stringify({
+
+          status: response.status,
+          message:response.message,
+          data: response.data,
+          code: response.code
+
+        }))
+
+        return response;
+
+
 
       })
     )
 
-
-
   }
-
-
-  obtenerProducto(id: number): Observable<Producto> {
-    return this.http.get<{data: Producto}>(`${this.apiGlobal}/productos/${id}`)
-      .pipe(
-        map(response => response.data)
-      );
-  }
-
-
-
-
 
 
 

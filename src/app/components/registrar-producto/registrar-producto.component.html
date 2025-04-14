@@ -1,211 +1,183 @@
-<div class="product-register-container">
+<div class="registro-producto-container">
+  <div class="animated-background"></div>
+  <div class="animated-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <div class="form-container">
     <div class="form-header">
-        <h2 class="title">Registra un nuevo producto</h2>
-        <p class="subtitle">Completa el formulario para añadir tu producto al marketplace</p>
+      <div class="header-icon">
+        <i class="bi bi-bag-heart-fill"></i>
+      </div>
+      <h1 class="title">Vende tu Producto</h1>
+      <p class="subtitle"><i class="bi bi-cash-coin"></i> Genera ganancias hoy con tu producto</p>
     </div>
 
-    <div *ngIf="errorMessage" class="alert alert-danger animate__animated animate__shakeX">
-        <svg xmlns="http://www.w3.org/2000/svg" class="alert-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-        </svg>
-        {{ errorMessage }}
-    </div>
-
-    <div *ngIf="successMessage" class="alert alert-success animate__animated animate__bounceIn">
-        <svg xmlns="http://www.w3.org/2000/svg" class="alert-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-        </svg>
-        {{ successMessage }}
-    </div>
-
-    <form [formGroup]="productoForm" (ngSubmit)="agregarProducto()" class="product-form">
-        <div class="form-group">
-            <label for="nombre" class="form-label">
-                <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 4h3a3 3 0 006 0h3a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm2.5 7a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm2.45 4a2.5 2.5 0 10-4.9 0h4.9zM12 9a1 1 0 100 2h3a1 1 0 100-2h-3zm-1 4a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z" clip-rule="evenodd" />
-                </svg>
-                Nombre del producto
-            </label>
-            <div class="input-container">
-                <input 
-                    type="text" 
-                    id="nombre" 
-                    formControlName="nombre_producto" 
-                    class="form-control animate__animated animate__fadeIn" 
-                    [class.is-invalid]="productoForm.get('nombre_producto')?.invalid && productoForm.get('nombre_producto')?.touched"
-                    placeholder="Ingrese el nombre del producto">
-                <div class="input-status" *ngIf="productoForm.get('nombre_producto')?.valid && productoForm.get('nombre_producto')?.touched">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-            </div>
-            <div class="invalid-feedback animate__animated animate__fadeIn" *ngIf="productoForm.get('nombre_producto')?.errors?.['required'] && productoForm.get('nombre_producto')?.touched">
-                <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-                El nombre del producto es requerido
-            </div>
-            <div class="invalid-feedback animate__animated animate__fadeIn" *ngIf="productoForm.get('nombre_producto')?.errors?.['minlength']">
-                <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-                El nombre debe tener al menos 3 caracteres
-            </div>
+    <form [formGroup]="productoFormulario" (ngSubmit)="venderProducto()" class="producto-form">
+      <div class="form-group">
+        <label for="nombre_producto"><i class="bi bi-tag-fill"></i> Nombre del Producto</label>
+        <div class="input-with-icon">
+          <i class="bi bi-box-seam input-icon"></i>
+          <input 
+            type="text"
+            id="nombre_producto"
+            formControlName="nombre_producto"
+            placeholder="Ejemplo: Mesa, Celular, Sillón..."
+            class="form-control"
+            [ngClass]="{'invalid':productoFormulario.get('nombre_producto')?.invalid && productoFormulario.get('nombre_producto')?.touched}"
+          >                    
         </div>
-
-        <div class="form-group">
-            <label for="precio" class="form-label">
-                <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
-                </svg>
-                Precio del Producto
-            </label>
-            <div class="input-container">
-                <input 
-                    type="number" 
-                    id="precio" 
-                    formControlName="precio_producto" 
-                    class="form-control animate__animated animate__fadeIn"
-                    [class.is-invalid]="productoForm.get('precio_producto')?.invalid && productoForm.get('precio_producto')?.touched"
-                    placeholder="Ingrese el precio del producto">
-                <div class="input-status" *ngIf="productoForm.get('precio_producto')?.valid && productoForm.get('precio_producto')?.touched">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-            </div>
-            <div class="invalid-feedback animate__animated animate__fadeIn" *ngIf="productoForm.get('precio_producto')?.errors?.['required'] && productoForm.get('precio_producto')?.touched">
-                <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-                El precio es requerido
-            </div>
-            <div class="invalid-feedback animate__animated animate__fadeIn" *ngIf="productoForm.get('precio_producto')?.errors?.['min']">
-                <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-                El precio debe ser mayor a 0
-            </div>
+        <div class="error-message"
+          *ngIf="productoFormulario.get('nombre_producto')?.invalid && productoFormulario.get('nombre_producto')?.touched">
+          <span *ngIf="productoFormulario.get('nombre_producto')?.errors?.['required']">
+            El nombre del producto es obligatorio
+          </span>
+          <span *ngIf="productoFormulario.get('nombre_producto')?.errors?.['minlength']">
+            El nombre del producto debe tener al menos 4 caracteres
+          </span>
         </div>
+      </div>
 
-        <div class="form-group">
-            <label for="descripcion" class="form-label">
-                <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-                </svg>
-                Descripción del producto
-            </label>
-            <div class="textarea-container">
-                <textarea 
-                    id="descripcion" 
-                    formControlName="descripcion" 
-                    class="form-control animate__animated animate__fadeIn"
-                    [class.is-invalid]="productoForm.get('descripcion')?.invalid && productoForm.get('descripcion')?.touched"
-                    placeholder="Ingrese la descripción del producto"
-                    rows="3"></textarea>
-                <div class="input-status" *ngIf="productoForm.get('descripcion')?.valid && productoForm.get('descripcion')?.touched">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-            </div>
-            <div class="invalid-feedback animate__animated animate__fadeIn" *ngIf="productoForm.get('descripcion')?.errors?.['required'] && productoForm.get('descripcion')?.touched">
-                <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-                La descripción es requerida
-            </div>
-            <div class="invalid-feedback animate__animated animate__fadeIn" *ngIf="productoForm.get('descripcion')?.errors?.['minlength']">
-                <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-                La descripción debe tener al menos 10 caracteres
-            </div>
+      <div class="form-group">
+        <label for="precio_producto"><i class="bi bi-currency-dollar"></i> Precio del Producto</label>
+        <div class="input-with-icon">
+          <i class="bi bi-cash input-icon"></i>
+          <input 
+            type="number"
+            id="precio_producto"
+            formControlName="precio_producto"
+            placeholder="Ejemplo: 1000"
+            class="form-control"
+            [ngClass]="{'invalid':productoFormulario.get('precio_producto')?.invalid && productoFormulario.get('precio_producto')?.touched}"
+          >
         </div>
+        <div class="error-message"
+          *ngIf="productoFormulario.get('precio_producto')?.invalid && productoFormulario.get('precio_producto')?.touched">
+          <span *ngIf="productoFormulario.get('precio_producto')?.errors?.['required']">
+            El precio del producto es obligatorio
+          </span>
+        </div>
+      </div>
 
-        <div class="form-group">
-            <label for="imagen" class="form-label">
-                <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
-                </svg>
-                URL de la imagen del producto
-            </label>
-            <div class="input-container">
-                <input 
-                    type="url" 
-                    id="imagen" 
-                    formControlName="imagen_producto" 
-                    class="form-control animate__animated animate__fadeIn"
-                    [class.is-invalid]="productoForm.get('imagen_producto')?.invalid && productoForm.get('imagen_producto')?.touched"
-                    placeholder="Ingrese la URL de la imagen del producto">
-                <div class="input-status" *ngIf="productoForm.get('imagen_producto')?.valid && productoForm.get('imagen_producto')?.touched">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-            </div>
-            <div class="invalid-feedback animate__animated animate__fadeIn" *ngIf="productoForm.get('imagen_producto')?.errors?.['required'] && productoForm.get('imagen_producto')?.touched">
-                <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-                La URL de la imagen es requerida
-            </div>
-            <div class="image-preview" *ngIf="productoForm.get('imagen_producto')?.valid && productoForm.get('imagen_producto')?.value">
-                <img [src]="productoForm.get('imagen_producto')?.value" alt="Vista previa" class="preview-img animate__animated animate__fadeIn">
-            </div>
+      <div class="form-group full-width">
+        <label for="descripcion"><i class="bi bi-card-text"></i> Descripción del producto</label>
+        <div class="input-with-icon textarea-container">
+          <i class="bi bi-pencil-square input-icon textarea-icon"></i>
+          <textarea
+            id="descripcion"
+            formControlName="descripcion"
+            placeholder="Ejemplo: Manga de One piece semiusado"
+            class="form-control textarea"
+            [ngClass]="{'invalid':productoFormulario.get('descripcion')?.invalid && productoFormulario.get('descripcion')?.touched}"
+          ></textarea>
         </div>
+        <div class="error-message" 
+          *ngIf="productoFormulario.get('descripcion')?.invalid && productoFormulario.get('descripcion')?.touched">
+          <span *ngIf="productoFormulario.get('descripcion')?.errors?.['required']">
+            La descripción es obligatoria
+          </span>
+          <span *ngIf="productoFormulario.get('descripcion')?.errors?.['minlength']">
+            La descripción debe tener al menos 4 caracteres
+          </span>
+        </div>
+      </div>
 
-        <div class="form-group">
-            <label for="categoria" class="form-label">
-                <svg xmlns="http://www.w3.org/2000/svg" class="input-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
-                </svg>
-                Categoría del producto
-            </label>
-            <div class="select-container">
-                <select 
-                    id="categoria" 
-                    formControlName="categoria_id" 
-                    class="form-control animate__animated animate__fadeIn"
-                    [class.is-invalid]="productoForm.get('categoria_id')?.invalid && productoForm.get('categoria_id')?.touched">
-                    <option value="">Seleccione una categoría</option>
-                    <option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.nombre_categoria }}</option>
-                </select>
-                <div class="input-status" *ngIf="productoForm.get('categoria_id')?.valid && productoForm.get('categoria_id')?.touched">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-            </div>
-            <div class="invalid-feedback animate__animated animate__fadeIn" *ngIf="productoForm.get('categoria_id')?.errors?.['required'] && productoForm.get('categoria_id')?.touched">
-                <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-                La categoría es requerida
-            </div>
+      <div class="form-group">
+        <label for="imagen_producto"><i class="bi bi-image"></i> URL de la imagen</label>
+        <div class="input-with-icon">
+          <i class="bi bi-link-45deg input-icon"></i>
+          <input 
+            type="text" 
+            id="imagen_producto" 
+            formControlName="imagen_producto"
+            placeholder="https://ejemplo.com/imagen.jpg"
+            class="form-control"
+            [ngClass]="{'invalid': productoFormulario.get('imagen_producto')?.invalid && productoFormulario.get('imagen_producto')?.touched}"
+          >
         </div>
+        <div class="error-message" 
+          *ngIf="productoFormulario.get('imagen_producto')?.invalid && productoFormulario.get('imagen_producto')?.touched">
+          <span *ngIf="productoFormulario.get('imagen_producto')?.errors?.['required']">
+            La URL de la imagen es obligatoria
+          </span>
+        </div>
+      </div>
 
-        <div class="form-actions">
-            <button 
-                type="submit" 
-                class="submit-button animate__animated animate__pulse"
-                [disabled]="productoForm.invalid || successMessage">
-                <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
-                </svg>
-                Registrar Producto
-            </button>
-            <button 
-                type="button" 
-                class="cancel-button"
-                routerLink="/dashboard">
-                <svg xmlns="http://www.w3.org/2000/svg" class="button-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
-                Cancelar
-            </button>
+      <div class="form-group">
+        <label for="cantidad_productos"><i class="bi bi-123"></i> Cantidad de Productos</label>
+        <div class="input-with-icon">
+          <i class="bi bi-boxes input-icon"></i>
+          <input 
+            type="number" 
+            id="cantidad_productos" 
+            formControlName="cantidad_productos"
+            placeholder="Ingresa la cantidad de productos"
+            class="form-control"
+            [ngClass]="{'invalid': productoFormulario.get('cantidad_productos')?.invalid && productoFormulario.get('cantidad_productos')?.touched}"
+          >
         </div>
+        <div class="error-message" 
+          *ngIf="productoFormulario.get('cantidad_productos')?.invalid && productoFormulario.get('cantidad_productos')?.touched">
+          <span *ngIf="productoFormulario.get('cantidad_productos')?.errors?.['required']">
+            La cantidad es obligatoria
+          </span>
+          <span *ngIf="productoFormulario.get('cantidad_productos')?.errors?.['pattern']">
+            Solo se permiten números
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="categoria"><i class="bi bi-bookmark-fill"></i> Seleccione la categoría disponible</label>
+        <div class="input-with-icon">
+          <i class="bi bi-list-ul input-icon"></i>
+          <select
+            id="categoria"
+            formControlName="categoria_id"
+            class="form-control"
+            [ngClass]="{'invalid': productoFormulario.get('categoria_id')?.invalid && productoFormulario.get('categoria_id')?.touched}"
+          >
+            <option value="" disabled selected>
+              Seleccione una categoría
+            </option>
+            <option *ngFor="let categoria of categorias" [value]="categoria.id">
+              {{categoria.nombre_categoria}}
+            </option>
+          </select>
+        </div>
+        <div class="error-message" 
+          *ngIf="productoFormulario.get('categoria_id')?.invalid && productoFormulario.get('categoria_id')?.touched">
+          <span *ngIf="productoFormulario.get('categoria_id')?.errors?.['required']">
+            Debes seleccionar una categoría
+          </span>
+        </div>
+      </div>
+
+      <div class="message-container">
+        <div class="error-alert" *ngIf="errorMensaje">
+          <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMensaje }}
+        </div>
+        <div class="success-alert" *ngIf="mensajeExito">
+          <i class="bi bi-check-circle-fill"></i> {{ mensajeExito }}
+        </div>
+      </div>
+      
+      <div class="button-container">
+        <button 
+          type="submit" 
+          class="submit-button" 
+          [disabled]="productoFormulario.invalid || estaCargando"
+        >
+          <span *ngIf="!estaCargando"><i class="bi bi-upload"></i> Publicar Producto</span>
+          <div class="loader" *ngIf="estaCargando"></div>
+        </button>
+        
+        <button type="button" class="cancel-button" (click)="rutaDashboard()">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </button>
+      </div>
     </form>
+  </div>
 </div>
