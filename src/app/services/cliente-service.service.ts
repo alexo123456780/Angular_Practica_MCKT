@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ClienteResponse } from '../interfaces/cliente.interface';
+import { ClientePassword, ClienteResponse } from '../interfaces/cliente.interface';
 import { Cliente } from '../interfaces/cliente.interface';
 
 
@@ -66,6 +66,96 @@ export class ClienteServiceService {
     )
 
   }
+
+
+  obtenerIDCliente():number | null{
+
+    try{
+
+      const cliente = localStorage.getItem('cliente');
+
+      let id = 0;
+
+      if(!cliente){
+
+        return  null;
+
+      }
+
+
+      const clienteJson = JSON.parse(cliente);
+
+      if(clienteJson && clienteJson.id && clienteJson.id !== null  && clienteJson.id !== undefined && typeof clienteJson.id === 'number'){
+
+        id = clienteJson.id;
+
+        return id;
+
+      }
+
+      return null;
+
+
+
+
+    }catch(error){
+
+
+      console.error('Erro al obtener el Id del cliente',error)
+      return null;
+
+    }
+  }
+
+  verInfoCliente(id:number):Observable<ClienteResponse>{
+
+
+    return this.http.get<ClienteResponse>(`${this.apiBase}/verInfo/${id}`).pipe(
+
+      map(response =>{
+
+        console.log('Respuesta de la api: ',JSON.stringify({
+
+          status:response.status,
+          message:response.message,
+          data:response.data,
+          code:response.code
+
+        },null,2))
+
+
+        return response;
+
+
+      })
+
+
+
+    )
+  }
+
+
+  cambiarPassword(id:number,password:ClientePassword):Observable<ClienteResponse>{
+
+    return this.http.put<ClienteResponse>(`${this.apiBase}/cambioPassword/${id}`,password).pipe(
+
+      map(response =>{
+
+        console.log('Peticion exitosa datos del backend: ',JSON.stringify({
+
+          status: response.status,
+          message:response.message,
+          data:response.data,
+          code:response.code
+        },null,2))
+
+
+        return response;
+      })
+
+    )
+  }
+
 
 
 

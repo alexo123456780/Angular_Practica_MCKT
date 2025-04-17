@@ -4,19 +4,23 @@ import { Router } from "@angular/router";
 export const ClienteAuthGuard = () => {
 
     const router = inject(Router);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('cliente_token');
+    const dataCliente = localStorage.getItem('cliente');
 
-    if(!token){
+    if(!token || !dataCliente){
 
-        console.log('No hay token se require que inicie sesion...');
+        console.log('No hay informacion del cliente logeate antes de entrar a dashboard...');
 
         router.navigate(['/cliente-login']);
 
         return false
+    }
+    
+
 
     
-    }
 
+    
     return true;
 
 }

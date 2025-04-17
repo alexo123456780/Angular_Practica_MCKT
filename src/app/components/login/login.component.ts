@@ -80,6 +80,13 @@ export class LoginComponent {
           
             }
 
+            if(!response.data){
+
+              this.errorMensaje = 'Crea una cuenta para empezar a comprar'
+              console.log('No ha creado una cuenta');
+
+            }
+
             if(!response){
 
               console.log('No hay info del usuario');
@@ -108,7 +115,7 @@ export class LoginComponent {
 
         error: (error) =>{
           this.estaCargando = false;
-          this.errorMensaje = 'Credenciales invalidas intente de nuevo porfavor'
+          this.errorMensaje = 'Credenciales invalidas intente de nuevo porfavor o cree una cuenta para comenzar a comprar'
           console.error('Credenciales invalidas: ',JSON.stringify(error,null,2));
 
         }

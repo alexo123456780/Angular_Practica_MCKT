@@ -1,272 +1,433 @@
-/*import { Component , type OnInit} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Component, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { Producto } from '../../../interfaces/producto.interface';
-import { Categoria } from '../../../interfaces/categoria.interface';
 import { ProductosServiceService } from '../../../services/productos-service.service';
+import { Producto } from '../../../interfaces/producto.interface';
 import { CategoriaServiceService } from '../../../services/categoria-service.service';
+import { Categoria } from '../../../interfaces/categoria.interface';
+import { CarritoServiceService } from '../../../services/carrito-service.service';
+import { Carrito, CarritoAgregar } from '../../../interfaces/carrito';
+import { ClienteServiceService } from '../../../services/cliente-service.service';
+
 
 @Component({
   selector: 'app-cliente-home',
   standalone: true,
-  imports: [CommonModule,RouterModule,FormsModule],
+  imports: [FormsModule,RouterModule,CommonModule],
   templateUrl: './cliente-home.component.html',
   styleUrls: ['./cliente-home.component.scss']
 })
-export class ClienteHomeComponent {
+
+
+export class ClienteHomeComponent implements OnInit {
+
 
   productos: Producto[] = [];
   categorias: Categoria[] = [];
+  nombre_cliente: string = '';
+  foto_perfil: string = '';
   productosFiltrados: Producto[] = [];
   categoriaSeleccionada: number | null = null;
-  busquedaporTermino: string = '';
-  ordenamiento: string = '';
-  paginaActual: number = 1;
-  nombre_cliente: string = '';
-  perfil_cliente: string = '';
-  imagen_categoria: string = '';
+  errorMensaje: string = '';
+  busqueda: string = '';
+  ordenSeleccionado: string = 'nombre_asc';
+  nombre_categoria: string = '';
+  mensajeExito : string = '';
+  id_cliente: number | null = 1;
+  estaCargando: boolean = false;
 
-  constructor(private productoService: ProductosServiceService, private categoriaService:CategoriaServiceService, private router: Router){}
+  constructor(private productoService:ProductosServiceService, private categoriaService:CategoriaServiceService, private router:Router,
+    private carritoService:CarritoServiceService, private clienteService: ClienteServiceService
 
+  ){}
 
-  ngOnInit():void{
+  ngOnInit(): void {
 
-    this.cargarProductos();
-    this.cargarCategorias();
-    this.obtenerNombreCliente();
-
-  }
-
-
-
-  cargarProductos():void{
-    this.productoService.obtenerProductos().subscribe({
-
-      next: (productos:Producto[]) =>{
-
-        this.productos = productos;
-
-        this.productosFiltrados = productos;
-
-        console.log('Productos cargados:' ,productos)
-
-        this.aplicarFiltros();
-      },
-
-      error: (error) =>{
-
-        console.log('Ocurrio un error al cargar los productos:',error);
-
-      }
-    })
-  }
-
-
-  cargarCategorias():void{
-
-    this.categoriaService.obtenerCategorias().subscribe({
-
-      next: (categorias:Categoria[]) =>{
-
-        this.categorias = categorias;
-        this.imagen_categoria = categorias[0].imagen_categoria;
-
-      },
-
-      error: (error) =>{
-
-        console.log('Error al cargar las categorias:' ,error);
-
-      }
-
-    })
-  }
-
-
-  buscarProductos(event:Event):void{
-
-    const inputElemento = event.target as HTMLInputElement;
-
-    this.busquedaporTermino = inputElemento.value;
-
-
-    this.aplicarFiltros();
-
+    this.obtenerProductos();
+    this.obtenerCategorias();
+    this.obtenerInfoCliente();
+    this.BuscarIdCliente();
 
   }
 
+  obtenerProductos():void{
 
-  ordenarProductos(event:Event):void{
+    try{
 
+      this.productoService.obtenerProductos().subscribe({
 
-    const  selectedElement = event.target as HTMLSelectElement;
+        next: (response) =>{
 
-    this.ordenamiento = selectedElement.value;
+          if(response.data.length < 0){
 
-    this.aplicarFiltros();
-  }
+            this.errorMensaje = 'Aun no hay productos disponibles';
+            console.log('No hay productos disponoibles en este momento');
 
-
-
-  aplicarFiltros():void{
-
-    let productosFiltrados = [...this.productos];
-
-    if(this.busquedaporTermino){
-
-      productosFiltrados = productosFiltrados.filter((producto) =>{
-
-        return producto.nombre_producto.toLowerCase().includes(this.busquedaporTermino.toLowerCase()) ||
-        producto.descripcion.toLowerCase().includes(this.busquedaporTermino.toLowerCase());
-
-      })
-    }
+          }
 
 
-    if(this.categoriaSeleccionada !== null){
+          if(response && response.data){
 
-      productosFiltrados = productosFiltrados.filter((producto) =>{
+            console.log('Productos obtenidos correctamente:',JSON.stringify(response.data,null,2));
 
-        if(producto.categoria && producto.categoria_id === this.categoriaSeleccionada){
-          return true;
+            this.productos = response.data;
 
-        }
-        if(producto.categoria_id === this.categoriaSeleccionada){
-          return true;
+            this.productosFiltrados = [...this.productos];
 
+            console.log('Copia de los productos:',this.productosFiltrados)
+
+          }
+
+        },
+
+        error: (error) =>{
+
+          this.errorMensaje = 'Ocurrio un error al traer los productos';
+          console.log('Error al obtener los productos:',error);
         }
 
-        return false;
       })
+
+    }catch(error){
+
+      console.log('Error al traer los productos',error)
     }
 
+  }
 
-    switch(this.ordenamiento){
+  obtenerCategorias():void{
 
-      case  'precio-asc':
+    try{
 
-      productosFiltrados.sort((a,b) => a.precio_producto - b.precio_producto)
-      break;
+      this.categoriaService.obtenerCategorias().subscribe({
 
+        next: (response) => {
 
-      case 'precio-desc':
+          if(response.data.length === 0){
 
-      productosFiltrados.sort((a,b) => b.precio_producto - a.precio_producto)
-      break;
+            this.errorMensaje = 'No hay categorias disponibles aun';
+            console.log('Aun no hay categorias en las base de datos');
 
+          }
 
-      case 'recientes':
+          if(response && response.data){
 
-      productosFiltrados.reverse();
-      break;
+           console.log('Categorias obtenidas correctamente:',JSON.stringify(response.data,null,2));
 
+           this.categorias = response.data;
 
+          }
 
-      default:
-      console.log('No hay algo de orden de eso xdxdxdxd');
-      break;  
+  
+        },
+
+        error: (error) =>{
+
+          this.errorMensaje = 'Ocurrio un error al obtener las categorias';
+          console.log('Error en el backend:',JSON.stringify(error,null,2));
+
+        }
+      })
+
+    }catch(error){
+
+      console.log('Error en la peticion de categorias',error);
 
     }
 
+  }
 
-    this.productosFiltrados =  productosFiltrados;
+  metodoBusqueda(event:any):void{
+
+    this.busqueda = event.target.value;
+    this.metodoFiltrado();
 
   }
 
 
-  filtrarporCategoria(categoriaId:number | null):void{
+  metodoFiltarCategorias(CategoriaId:any):void{
 
-    this.categoriaSeleccionada = categoriaId;
+    this.categoriaSeleccionada = CategoriaId;
+    this.metodoFiltrado();
 
-    this.aplicarFiltros();
-
-
-    console.log('Categoria seleccionada: ',this.categoriaSeleccionada);
-  }
-
-
-  verDetalles(producto:Producto):void{
-
-    console.log('Detalles del producto:', JSON.stringify(producto,null,2));
 
   }
 
 
+  metodoOrdenamiento(event:any):void{
 
+    this.ordenSeleccionado = event.target.value;
+    this.metodoFiltrado();
 
-  obtenerNombreCategoria(indice:number, producto:Producto):string{
+  }
 
-    if(producto.categoria && producto.categoria.nombre_categoria){
+  metodoFiltrado():void{
 
-      return producto.categoria.nombre_categoria;
+    let productosFiltradosFinales = [...this.productos];
+
+    if(this.busqueda){
+
+      productosFiltradosFinales = productosFiltradosFinales.filter((producto) => producto.nombre_producto.toLowerCase().includes(this.busqueda.toLowerCase())||
+      producto.descripcion.toLowerCase().includes(this.busqueda.toLowerCase())
+    
+    )
     }
+
+
+    if(this.categoriaSeleccionada){
+
+      productosFiltradosFinales = productosFiltradosFinales.filter((producto) => producto.categoria_id === this.categoriaSeleccionada)
+
+    }
+
+    if(this.ordenSeleccionado){
+
+      switch(this.ordenSeleccionado){
+
+        case 'nombre_asc':
+        productosFiltradosFinales.sort((a,b) => a.nombre_producto.localeCompare(b.nombre_producto));  
+        break;
+
+        case 'nombre_des':
+        productosFiltradosFinales.sort((a,b) => b.nombre_producto.localeCompare(a.nombre_producto));  
+        break;
+
+        case 'precio_asc':
+        productosFiltradosFinales.sort((a,b) => a.precio_producto - b.precio_producto );
+        break;
+        
+        case 'precio_des':
+        productosFiltradosFinales.sort((a,b) => b.precio_producto - a.precio_producto); 
+        break;
+
+        default:
+        this.errorMensaje = 'Ocurrio un error al filtrar los productos';
+        console.log('Error de filtrados de productos')  
+
+      }
+
+
+    }
+
+
+    this.productosFiltrados = productosFiltradosFinales;
+
+  }
+
+
+
+  obtenerNombreCategoria(index:number, producto:Producto ):string{
+
+    if(producto.categoria_id && producto.categoria?.nombre_categoria){
+
+      this.nombre_categoria = producto.categoria.nombre_categoria;
+
+    
+    }
+
 
     if(producto.categoria_id && this.categorias && this.categorias.length > 0){
 
-      const categoria = this.categorias.find((categoria) => categoria.id  === producto.categoria_id);
+      const categoria = this.categorias.find((categoria) => categoria.id === producto.categoria_id);
 
       if(categoria){
 
-        return categoria.nombre_categoria;
+        this.nombre_categoria = categoria.nombre_categoria;
+        
 
       }
-    }
-
-
-    if(this.categorias && this.categorias.length > 0){
-
-      const categoriaIndice = indice % this.categorias.length;
-
-      return this.categorias[categoriaIndice].nombre_categoria;
 
     }
 
 
-    return 'Categoria no disponible';
+    return this.nombre_categoria;
 
+
+  
   }
-
-
-
-  //metodo para cerrar sesion
 
 
   cerrarSesion():void{
 
-    console.log('Cerrando sesion...');
 
-    localStorage.removeItem('token');
-    localStorage.removeItem('data');
+    this.mensajeExito = 'Sesion cerrada correctamente';
+    this.mensajeExito = '';
 
-    this.router.navigate(['/cliente-login'])
+    localStorage.removeItem('cliente');
+    localStorage.removeItem('cliente_token');
+
+    console.log('Sesion cerrada automaticamente');
+
+    setTimeout(() =>{
+
+      this.router.navigate(['cliente-login'])
+
+
+    })
+
+  }
+
+
+  obtenerInfoCliente():void{
+
+    const Cliente = localStorage.getItem('cliente');
+
+    if(Cliente && Cliente !== 'undefined'){
+
+      const datosCliente = JSON.parse(Cliente);
+
+      if(datosCliente){
+
+        console.log('Informacion del cliente:',JSON.stringify(datosCliente,null,2));
+
+        this.nombre_cliente = datosCliente.nombre_cliente;
+        this.foto_perfil = datosCliente.perfil_cliente;
+      }
+    }
+  }
+
+  BuscarIdCliente():number | null{
+
+    const cliente = localStorage.getItem('cliente');
+
+    if(cliente && cliente !== 'undefined'){
+
+      const informacionCliente = JSON.parse(cliente);
+
+      if(informacionCliente && informacionCliente.id && typeof informacionCliente.id === 'number'){
+
+        this.id_cliente = informacionCliente.id;
+
+        console.log('Id del cliente:',this.id_cliente);
+
+        return this.id_cliente;
+
+      }
+
+    }
+    return null;
+
   }
 
 
 
 
-  obtenerNombreCliente():void{
+  agregarProductoCarro(producto_id?: number):void{
 
-    const clienteData = localStorage.getItem('data');
+    this.estaCargando = true;
+    this.errorMensaje = ''
 
-    if(clienteData && clienteData !== 'undefined'){
 
-      const cliente = JSON.parse(clienteData);
+    if(!this.id_cliente){
 
-      if(cliente && cliente.nombre_cliente && cliente.perfil_cliente){
+      return;
+    }
 
-        console.log('Bienvenido',cliente.nombre_cliente);
-        this.nombre_cliente = cliente.nombre_cliente;
-        this.perfil_cliente = cliente.perfil_cliente;
-      
+    const datos = {
+
+      cliente_id: this.id_cliente,
+      producto_id: producto_id || this.productosFiltrados[0].id
+
+    }
+
+    const carrito: CarritoAgregar = {...datos}
+
+
+    this.carritoService.agregarproductoCarrito(carrito).subscribe({
+
+      next: (response) =>{
+
+        this.estaCargando = false;
+        this.mensajeExito = 'Producto agregado exitosamente al carrito'
+
+
+        setTimeout(() =>{
+          this.mensajeExito = '';
+
+
+        },1500)
+        
+
+        if(response){
+
+          console.log('Producto agregado exitosamente datos',JSON.stringify(response.data,null,2));
+
+        }
+
+
+      },
+      error: (error) =>{
+        this.estaCargando = false;
+        this.errorMensaje = 'Este producto ya se encuentra en el carrito';
+
+        setTimeout(() =>{
+
+          this.errorMensaje = '';
+
+
+        },1500)
+        console.log('Erro al agregar el producto al carrito',error)
+
       }
 
 
+
+    })
+  }
+
+
+  rutaInfoCliente():void{
+
+    this.router.navigate(['/info-cliente']);
+
+  }
+
+  rutaPasswors():void{
+
+    this.router.navigate(['/cambiar-passwordC'])
+  }
+
+
+  obtenerIdProducto(id_producto:number):void{
+
+    if(id_producto){
+
+      this.router.navigate(['/ver-mas',id_producto])
     }
 
   }
 
+  rutaCarrito():void{
+
+    this.router.navigate(['/carrito-cliente']);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
-*/
+

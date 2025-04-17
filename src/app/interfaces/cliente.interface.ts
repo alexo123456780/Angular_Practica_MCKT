@@ -7,8 +7,8 @@ export interface Cliente{
     direccion:string,
     password:string,
     perfil_cliente:string,
-    created_at: Date,
-    updated_at: Date,
+    created_at:string,
+    updated_at?:string
 
 }
 
@@ -17,8 +17,28 @@ export interface ClienteResponse{
 
     status:boolean,
     message:string,
-    data:Cliente | Cliente[],
+    data:Cliente,
     token:string,
     code:number
 
 }
+
+
+export interface ClienteListaResponse{
+
+    status:boolean,
+    message:string,
+    data: Cliente[],
+    token: string
+    code: number;
+
+
+}
+
+
+export interface ClientePassword{
+
+    password:string
+}
+
+

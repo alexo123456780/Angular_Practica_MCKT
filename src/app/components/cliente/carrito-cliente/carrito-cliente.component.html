@@ -1,1 +1,133 @@
-<p>carrito-cliente works!</p>
+<div class="contenedor-carrito animate__animated animate__fadeIn">
+  
+ 
+  <div *ngIf="mensajeExito" class="mensaje-exito animate__animated animate__fadeInUp">
+    <p>{{mensajeExito}}</p>
+  </div>
+
+  <div *ngIf="mensajeError" class="mensaje-error animate__animated animate__shakeX">
+    <p>{{mensajeError}}</p>
+  </div>
+
+  
+  <div class="carrito-header">
+
+    <button class="btn-continuar" (click)="rutaHome()">
+      <i class="fas fa-arrow-left"></i> Regresar
+    </button>
+  </div>
+
+  <div class="carrito-contenido">
+    <div class="carrito-productos">
+      <h2 class="titulo-carrito">Carrito de compras</h2>
+      <p class="subtitulo-carrito" *ngIf="productos.length > 0">Tienes {{productos.length}} artículos en tu carrito</p>
+      <p class="subtitulo-carrito" *ngIf="productos.length === 0">No tienes artículos en tu carrito</p>
+
+
+     
+      <!-- Implementra filtrado por ordenamiento  <div class="opciones-orden">
+        <span>Ordenar por:</span>
+        <select class="selector-orden">
+          <option value="precio">precio</option>
+          <option value="nombre">nombre</option>
+        </select>
+      </div>  -->
+
+      <div class="lista-productos">
+        <div *ngFor="let producto of productos; let i = index" class="producto-item animate__animated animate__fadeInUp" [style.animation-delay]="(i * 0.1) + 's'">
+          <div class="producto-imagen">
+            <img [src]="producto.imagen_producto" alt="{{producto.nombre_producto}}">
+          </div>
+          <div class="producto-info">
+            <h3 class="producto-titulo">{{producto.nombre_producto}}</h3>
+            <p class="producto-descripcion">{{producto.descripcion}}</p>
+            <div class="producto-detalles">
+              <span class="producto-precio">${{producto.precio_producto}}</span>
+            </div>
+          </div>
+          <button class="btn-eliminar" (click)="eliminarProductoCarro(producto.pivot.id)">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+
+        <!-- Mensaje si no hay productos -->
+        <div class="no-productos animate__animated animate__fadeIn" *ngIf="productos.length === 0">
+          <div class="icono-vacio">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <h3>Tu carrito está vacío</h3>
+          <p>¡Agrega productos para comenzar tu compra!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="detalles-tarjeta animate__animated animate__fadeInRight">
+      <div class="tarjeta-header">
+        <h2>Detalles de pago</h2>
+        <div class="usuario-avatar">
+          <img [src]="imagen_usuario" alt="Usuario">
+        </div>
+      </div>
+
+      <div class="tipo-tarjeta">
+        <h3>Tipo de tarjeta</h3>
+        <div class="opciones-tarjeta">
+          <div class="opcion-tarjeta mastercard seleccionada">
+            <i class="fab fa-cc-mastercard"></i>
+          </div>
+          <div class="opcion-tarjeta visa">
+            <i class="fab fa-cc-visa"></i>
+          </div>
+          <div class="opcion-tarjeta amex">
+            <i class="fab fa-cc-amex"></i>
+          </div>
+          <div class="opcion-tarjeta paypal">
+            <i class="fab fa-paypal"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="formulario-tarjeta">
+        <div class="campo-formulario">
+          <label>Nombre en la tarjeta</label>
+          <input type="text" placeholder="Nombre completo" class="input-tarjeta">
+        </div>
+
+        <div class="campo-formulario">
+          <label>Número de tarjeta</label>
+          <input type="text" placeholder="0000 0000 0000 0000" class="input-tarjeta">
+        </div>
+
+        <div class="campos-fecha-cvv">
+          <div class="campo-formulario fecha">
+            <label>Fecha</label>
+            <input type="text" placeholder="MM/AA" class="input-tarjeta">
+          </div>
+          <div class="campo-formulario cvv">
+            <label>CVV</label>
+            <input type="text" placeholder="123" class="input-tarjeta">
+          </div>
+        </div>
+      </div>
+
+      <div class="resumen-compra">
+        <div class="linea-resumen">
+          <span>Subtotal</span>
+        </div>
+        <div class="linea-resumen">
+          <span>Envío</span>
+          <span>$20.00</span>
+        </div>
+        <div class="linea-resumen total">
+          <span>Total (incl. impuestos)</span>
+        </div>
+      </div>
+
+      <button class="btn-checkout">
+        Finalizar compra <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  
+</div>

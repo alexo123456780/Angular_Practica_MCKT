@@ -41,8 +41,6 @@ export class ProductosServiceService {
 
 
   //nota uso la interfaz de producto recuerda que solo es una plantilla de valores luego tendre que asiganarle un valor propio en una variable del componente que llege a usar
-
-
   publicarProducto(producto:Producto):Observable<ProductoResponse>{
 
     return this.http.post<ProductoResponse>(`${this.apiBase}/crearProducto`,producto).pipe(
@@ -59,9 +57,6 @@ export class ProductosServiceService {
         }))
 
         return response;
-
-
-
       })
     )    
   }
@@ -83,13 +78,37 @@ export class ProductosServiceService {
         }))
 
         return response;
-
-
-
       })
     )
 
   }
+
+  obtenerInfoProducto(id_producto:number):Observable<ProductoResponse>{
+
+    return this.http.get<ProductoResponse>(`${this.apiBase}/ver-info/${id_producto}`).pipe(
+
+      map(response =>{
+
+        console.log('Producto obtenido correctamente',JSON.stringify({
+
+          status:response.status,
+          message:response.message,
+          data:response.data,
+          code:response.code
+        },null,2))
+
+
+        return response;
+
+      })
+
+    )
+  }
+
+  
+
+
+
 
 
 

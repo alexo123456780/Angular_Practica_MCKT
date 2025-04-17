@@ -282,7 +282,7 @@ export class HomeComponent implements OnInit {
     }
 
 
-    if(producto.categoria_id && this.categorias && this.categorias.length >0){
+    if(producto.categoria_id && this.categorias && this.categorias.length > 0){
 
       const categoria = this.categorias.find((categoria) => categoria.id === producto.categoria_id);
 
@@ -295,15 +295,7 @@ export class HomeComponent implements OnInit {
 
 
     }
-
-
-
-    
-
-
     return 'Categoria no disponible'
-   
-
   }
 
 
@@ -333,6 +325,7 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/cambiar-perfil'])
   }
 
+ 
   
 
   

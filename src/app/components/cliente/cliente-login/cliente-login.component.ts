@@ -21,12 +21,13 @@ export class ClienteLoginComponent {
   mensajeExito: string = '';
   estaCargando: boolean = false;
 
+
   constructor(private clienteService:ClienteServiceService, private fb:FormBuilder, private router:Router){
 
     this.formulario = this.fb.group({
 
       email: ['',[Validators.required, Validators.email]],
-      password: ['',[Validators.required, Validators.minLength(6)]]
+      password: ['',[Validators.required, Validators.minLength(4)]]
 
     })
   }
@@ -49,6 +50,7 @@ export class ClienteLoginComponent {
 
           this.estaCargando = false
           this.errorMensaje = '';
+          this.mensajeExito = 'Logeado exitosamente cliente'
 
 
           if(response){
@@ -59,7 +61,7 @@ export class ClienteLoginComponent {
 
             if(token){
 
-              localStorage.setItem('token',token);
+              localStorage.setItem('cliente_token',token);
               console.log('Token guardado correctamente');
 
 
@@ -73,7 +75,7 @@ export class ClienteLoginComponent {
 
               console.log('Guardando datos del usuario...');
 
-              localStorage.setItem('data',JSON.stringify(response.data))
+              localStorage.setItem('cliente',JSON.stringify(response.data))
 
               console.log('Datos del cliente guardado correctamente',JSON.stringify(response.data,null,2))
 
@@ -92,11 +94,11 @@ export class ClienteLoginComponent {
 
             console.log('Navegando al portal de clientes....');
 
-            /*setTimeout(() =>{
+            setTimeout(() =>{
 
-              this.router.navigate(['/cliente-home']);
               this.mensajeExito = 'Login exitoso'
-            },1500)*/
+              this.router.navigate(['/cliente-home']);
+            },1500)
           }else{
 
             console.log('Error al iniciar sesion',response);
@@ -110,6 +112,14 @@ export class ClienteLoginComponent {
           this.estaCargando = false;
           console.log('Credenciales Invalidas', JSON.stringify(error,null,2));
           this.errorMensaje = 'Credenciales Invalidas intente de nuevo porfavor...'
+
+          setTimeout(() =>{
+
+            this.errorMensaje = '';
+          },1500)
+
+
+
 
         }
       })
@@ -125,6 +135,9 @@ export class ClienteLoginComponent {
 
     }
   }
+
+
+
 
 
 

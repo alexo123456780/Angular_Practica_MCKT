@@ -1,0 +1,58 @@
+<div class="informacion-cliente-contenedor">
+    <div class="cliente-card animate__animated animate__fadeInUp">
+      <h1 class="card-header-title animate__animated animate__fadeInDown">Perfil de Cliente</h1>
+      <div class="cliente-card-header">
+        <div class="perfil-imagen gradient-border">
+          <ng-container *ngIf="perfil_cliente && perfil_cliente !== '' && perfil_cliente !== null; else placeholder">
+            <img [src]="perfil_cliente" alt="Foto de perfil" />
+          </ng-container>
+          <ng-template #placeholder>
+            <div class="perfil-placeholder">
+              {{ nombre_cliente ? nombre_cliente.charAt(0).toUpperCase() : '?' }}
+            </div>
+          </ng-template>
+        </div>
+        <div class="cliente-nombre">
+          <h2 class="animate__animated animate__fadeInDown">{{nombre_cliente}}</h2>
+          <span class="cliente-perfil animate__animated animate__fadeInLeft">
+            {{perfil_cliente ? 'Cliente' : 'Perfil no disponible'}}
+          </span>
+        </div>
+      </div>
+      <div class="cliente-card-body animate__animated animate__fadeIn">
+        <div class="cliente-info-row">
+          <i class="bi bi-envelope"></i>
+          <span>{{ correo_electronico }}</span>
+        </div>
+        <div class="cliente-info-row">
+          <i class="bi bi-telephone"></i>
+          <span>{{ numero_telefonico }}</span>
+        </div>
+        <div class="cliente-info-row">
+          <i class="bi bi-geo-alt"></i>
+          <span>{{ direccion }}</span>
+        </div>
+        <div class="cliente-info-row">
+          <i class="bi bi-calendar"></i>
+          <span>Registrado: {{ fecha_registro | date:'mediumDate' }}</span>
+        </div>
+        <div class="cliente-info-row" *ngIf="id_cliente">
+          <i class="bi bi-person-badge"></i>
+          <span>ID Cliente: {{ id_cliente }}</span>
+        </div>
+      </div>
+      <div *ngIf="mensajeError" class="error-mensaje animate__animated animate__shakeX">
+        {{ mensajeError }}
+      </div>
+
+
+      <button class="btn-continuar" (click)="rutaDashboardCliente()">
+
+        <i class="bi bi-arrow-left"></i>
+        Regresar
+
+      </button>
+
+
+    </div>
+  </div>

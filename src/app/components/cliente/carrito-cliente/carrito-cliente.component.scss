@@ -1,0 +1,512 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+
+// Variables de colores
+$color-primario: #4a01e0;
+$color-secundario: #7c4dff;
+$color-acento: #00c6ff;
+$color-texto: #333;
+$color-fondo: #f8f9fa;
+$color-tarjeta: #0033cc;
+$color-tarjeta-gradiente: #4a01e0;
+
+.contenedor-carrito {
+  display: flex;
+  flex-direction: column;
+  max-width: 1500px ;
+  margin: 60px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: $color-texto;
+  background-color: $color-fondo;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.carrito-header {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  
+  .btn-continuar {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, $color-primario, $color-secundario);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba($color-primario, 0.3);
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($color-primario, 0.4);
+    }
+    
+    i {
+      margin-right: 8px;
+    }
+  }
+}
+
+.carrito-contenido {
+  display: flex;
+  gap: 30px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.carrito-productos {
+  flex: 1;
+  background-color: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  
+  .titulo-carrito {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    background: linear-gradient(to right, $color-primario, $color-acento);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .subtitulo-carrito {
+    color: #666;
+    margin-bottom: 20px;
+  }
+}
+
+.opciones-orden {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  
+  span {
+    margin-right: 10px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .selector-orden {
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background-color: white;
+    font-size: 14px;
+    color: $color-texto;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    
+    &:focus {
+      border-color: $color-primario;
+      box-shadow: 0 0 0 2px rgba($color-primario, 0.2);
+    }
+  }
+}
+
+.lista-productos {
+  .producto-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .producto-imagen {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-right: 15px;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    
+    .producto-info {
+      flex: 1;
+      
+      .producto-titulo {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: $color-texto;
+      }
+      
+      .producto-descripcion {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      
+      .producto-detalles {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        .producto-cantidad {
+          background: linear-gradient(135deg, $color-primario, $color-secundario);
+          color: white;
+          padding: 3px 10px;
+          border-radius: 15px;
+          font-size: 12px;
+          font-weight: 600;
+        }
+        
+        .producto-precio {
+          font-size: 18px;
+          font-weight: 700;
+          color: $color-primario;
+        }
+      }
+    }
+    
+    .btn-eliminar {
+      background: none;
+      border: none;
+      color: #ff5252;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.2);
+        color: #ff1744;
+      }
+    }
+  }
+}
+
+.no-productos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  text-align: center;
+  
+  .icono-vacio {
+    font-size: 60px;
+    color: #ccc;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+  }
+  
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: $color-texto;
+  }
+  
+  p {
+    color: #666;
+  }
+}
+
+.detalles-tarjeta {
+  width: 350px;
+  background: linear-gradient(135deg, $color-tarjeta, $color-tarjeta-gradiente);
+  border-radius: 15px;
+  padding: 25px;
+  color: white;
+  box-shadow: 0 10px 30px rgba($color-tarjeta, 0.3);
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+  
+  .tarjeta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    
+    .usuario-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+.tipo-tarjeta {
+  margin-bottom: 25px;
+  
+  h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    opacity: 0.9;
+  }
+  
+  .opciones-tarjeta {
+    display: flex;
+    gap: 10px;
+    
+    .opcion-tarjeta {
+      width: 60px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      i {
+        font-size: 24px;
+      }
+      
+      &.seleccionada {
+        background-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      
+      &.mastercard i {
+        color: #ff5f00;
+      }
+      
+      &.visa i {
+        color: #1a1f71;
+      }
+      
+      &.amex i {
+        color: #2e77bb;
+      }
+      
+      &.paypal i {
+        color: #003087;
+      }
+    }
+  }
+}
+
+.formulario-tarjeta {
+  margin-bottom: 25px;
+  
+  .campo-formulario {
+    margin-bottom: 15px;
+    
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 8px;
+      opacity: 0.9;
+    }
+    
+    .input-tarjeta {
+      width: 100%;
+      padding: 12px 15px;
+      background-color: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+      
+      &:focus {
+        background-color: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+        outline: none;
+      }
+    }
+  }
+  
+  .campos-fecha-cvv {
+    display: flex;
+    gap: 15px;
+    
+    .campo-formulario {
+      flex: 1;
+    }
+  }
+}
+
+.resumen-compra {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 25px;
+  
+  .linea-resumen {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    &.total {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 18px;
+      font-weight: 700;
+    }
+  }
+}
+
+.btn-checkout {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  
+  i {
+    margin-left: 10px;
+  }
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(to right, #00b4e6, #0066e6);
+  }
+}
+
+// Animaciones adicionales
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Estilos responsivos adicionales
+@media (max-width: 576px) {
+  .producto-item {
+    flex-direction: column;
+    align-items: flex-start;
+    
+    .producto-imagen {
+      width: 100%;
+      height: 150px;
+      margin-right: 0;
+      margin-bottom: 15px;
+    }
+    
+    .btn-eliminar {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.mensaje-error {
+  background: linear-gradient(90deg, #ff3131, #ff914d);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(255, 49, 49, 0.15);
+  animation: shakeError 0.7s;
+}
+
+.mensaje-exito {
+  background: linear-gradient(90deg, #00c6ff, #43e97b);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(67, 233, 123, 0.15);
+  animation: fadeInUp 0.7s;
+}
+
+// Animaciones para los mensajes
+@keyframes shakeError {
+  0%, 100% { transform: scale(1); }
+  20% { transform: scale(0.97) rotate(-2deg); }
+  40% { transform: scale(1.03) rotate(2deg); }
+  60% { transform: scale(0.98) rotate(-1deg); }
+  80% { transform: scale(1.01) rotate(1deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

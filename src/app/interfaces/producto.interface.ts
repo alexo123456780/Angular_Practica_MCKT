@@ -1,4 +1,5 @@
 import { Categoria } from "./categoria.interface"
+import { Carrito } from "./carrito"
 
 export interface Producto{
     id:number,
@@ -12,9 +13,9 @@ export interface Producto{
     categoria?:Categoria,
     created_at: Date,
     updated_at: Date,
+    pivot: Carrito
 
 }
-
 
 export interface ProductoResponse{
 
@@ -31,8 +32,5 @@ export interface ProductoListaResponse{
     message:string,
     data:Producto[],
     code:number
-
-
-
 
 }
